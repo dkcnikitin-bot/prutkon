@@ -1,0 +1,15 @@
+# Среда Python и зависимости
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Временные файлы и сборка
+.DS_Store
+Thumbs.db
+extracted_xlsx/
+
+# Настройки IDE
+.vscode/
+.idea/
+.gemini/
