@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пруткон ОС | Стратегическая Презентация</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #050507;
+            --bg-panel: rgba(18, 18, 24, 0.7);
+            --brand-red: #f42c33;
+            --brand-red-glow: rgba(244, 44, 51, 0.5);
+            --accent-green: #00e676;
+            --accent-blue: #00b4ff;
+            --accent-purple: #9d4edd;
+            --accent-orange: #ff9100;
+            --text-main: #f8f8f8;
+            --text-muted: #9aa0a6;
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --sidebar-w: 380px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; position: relative; }
+
+        /* Typography Enhancements */
+        .text-gradient {
+            background: linear-gradient(90deg, #fff 0%, #aaa 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-red {
+            background: linear-gradient(90deg, #ff4b4b 0%, var(--brand-red) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* Animated Background Gradients */
+        .bg-orb { position: absolute; border-radius: 50%; filter: blur(120px); z-index: 0; animation: float 25s infinite alternate; opacity: 0.12; pointer-events: none; }
+        .bg-orb.red { background: var(--brand-red); width: 700px; height: 700px; top: -150px; right: -150px; animation-delay: 0s; }
+        .bg-orb.blue { background: var(--accent-blue); width: 600px; height: 600px; bottom: -200px; left: 10%; animation-delay: -7s; }
+        .bg-orb.purple { background: var(--accent-purple); width: 500px; height: 500px; top: 40%; right: 20%; animation-delay: -3s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-120px, 120px) scale(1.1); } }
+
+        /* Sidebar - Enterprise Glassmorphism */
+        .sidebar {
+            width: var(--sidebar-w); background: rgba(7, 7, 10, 0.85); backdrop-filter: blur(25px);
+            border-right: 1px solid var(--border-glass); display: flex; flex-direction: column; overflow-y: auto; z-index: 10;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        }
+        
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--brand-red); }
+
+        .sidebar-header {
+            padding: 3rem 2.5rem; border-bottom: 1px solid var(--border-glass);
+            position: sticky; top: 0; background: rgba(7, 7, 10, 0.95); backdrop-filter: blur(15px); z-index: 5;
+        }
+        .brand-title { font-family: 'Outfit', sans-serif; font-size: 2.8rem; font-weight: 900; color: #fff; line-height: 1; letter-spacing: -1px; }
+        .brand-title span { color: var(--brand-red); text-shadow: 0 0 25px var(--brand-red-glow); }
+        .brand-subtitle { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 4px; margin-top: 12px; font-weight: 800; }
+        
+        .nav-menu { padding: 1.5rem 0; list-style: none; }
+        .nav-item { padding: 0 1.2rem; margin-bottom: 4px; }
+        .nav-link {
+            display: flex; align-items: center; gap: 16px; padding: 12px 20px;
+            color: #7a8089; text-decoration: none; border-radius: 10px;
+            transition: all 0.3s ease; font-weight: 600; font-size: 0.85rem; border: 1px solid transparent;
+        }
+        .nav-link i { width: 24px; text-align: center; font-size: 1.15rem; transition: 0.3s; opacity: 0.7; }
+        .nav-link:hover { color: #fff; transform: translateX(6px); background: rgba(255,255,255,0.04); }
+        .nav-link.active {
+            background: linear-gradient(90deg, rgba(244, 44, 51, 0.12) 0%, transparent 100%);
+            color: #fff; border-left: 3px solid var(--brand-red); border-radius: 0 10px 10px 0;
+            box-shadow: inset 1px 0 0 var(--brand-red);
+        }
+        .nav-link.active i { color: var(--brand-red); opacity: 1; filter: drop-shadow(0 0 8px var(--brand-red-glow)); }
+        
+        .nav-group-title {
+            font-size: 0.65rem; color: #5a5f68; text-transform: uppercase;
+            letter-spacing: 3px; padding: 30px 0 12px 35px; font-weight: 900;
+        }
+
+        /* Content Area */
+        .main-content {
+            flex: 1; overflow-y: auto; scroll-behavior: smooth; position: relative; z-index: 5;
+            background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        .slide-section { min-height: 100vh; padding: 8rem 7rem; border-bottom: 1px solid var(--border-glass); display: flex; flex-direction: column; justify-content: center; position: relative; }
+
+        /* Animation Classes */
+        .reveal { opacity: 0; transform: translateY(50px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.15s; } .delay-2 { transition-delay: 0.3s; } .delay-3 { transition-delay: 0.45s; }
+
+        /* Title Screen */
+        .hero-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; overflow: hidden; }
+        .hero-logo-img { width: 150px; margin-bottom: 35px; border-radius: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px var(--brand-red-glow); border: 1px solid rgba(255,255,255,0.1); animation: float 8s infinite ease-in-out; }
+        .hero-logo { font-family: 'Outfit'; font-size: 8rem; font-weight: 900; margin-bottom: 15px; letter-spacing: -2px; }
+        .hero-logo span { color: var(--brand-red); text-shadow: 0 0 50px var(--brand-red-glow); }
+        .hero-version {
+            display: inline-flex; align-items: center; gap: 10px; padding: 10px 24px; background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.3); border-radius: 50px;
+            font-size: 1rem; color: var(--accent-green); font-family: 'JetBrains Mono', monospace; margin-bottom: 45px; letter-spacing: 3px; font-weight: 800; box-shadow: 0 0 20px rgba(0,230,118,0.1);
+        }
+        .hero-subtitle { font-size: 1.6rem; color: #b0b5be; max-width: 950px; line-height: 1.6; font-weight: 300; text-wrap: balance; }
+
+        /* Headers */
+        .section-header { margin-bottom: 4.5rem; position: relative; }
+        .section-badge {
+            display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; background: rgba(244, 44, 51, 0.1); border: 1px solid rgba(244, 44, 51, 0.2);
+            color: var(--brand-red); font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; border-radius: 50px; margin-bottom: 25px;
+        }
+        .section-badge.blue { background: rgba(0, 180, 255, 0.1); border-color: rgba(0, 180, 255, 0.2); color: var(--accent-blue); }
+        .section-badge.green { background: rgba(0, 230, 118, 0.1); border-color: rgba(0, 230, 118, 0.2); color: var(--accent-green); }
+        .section-badge.purple { background: rgba(157, 78, 221, 0.1); border-color: rgba(157, 78, 221, 0.2); color: var(--accent-purple); }
+        .section-badge.orange { background: rgba(255, 145, 0, 0.1); border-color: rgba(255, 145, 0, 0.2); color: var(--accent-orange); }
+        
+        .section-title { font-family: 'Outfit', sans-serif; font-size: 4.5rem; font-weight: 900; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -1.5px; text-wrap: balance; }
+        .section-desc { font-size: 1.3rem; color: var(--text-muted); max-width: 1000px; line-height: 1.6; font-weight: 400; text-wrap: balance; }
+
+        /* Premium Data/Metric Cards */
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+        .metric-card {
+            background: linear-gradient(145deg, rgba(20,20,26,0.8), rgba(15,15,20,0.9)); border: 1px solid var(--border-glass); border-radius: 20px;
+            padding: 2.5rem; text-align: left; display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 15px 30px rgba(0,0,0,0.4); transition: 0.3s;
+        }
+        .metric-card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-5px); }
+        .m-value { font-family: 'Outfit'; font-size: 4rem; font-weight: 900; line-height: 1; margin-bottom: 10px; color: #fff; }
+        .m-value span { font-size: 2rem; color: var(--text-muted); }
+        .m-label { font-size: 1.05rem; color: #a1a6b0; font-weight: 500; line-height: 1.4; }
+
+        /* Rich Content Cards */
+        .details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 2.5rem; }
+        .detail-card {
+            background: var(--bg-panel); backdrop-filter: blur(20px); border: 1px solid var(--border-glass); border-radius: 24px; padding: 3.5rem;
+            position: relative; overflow: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        /* Top accent border */
+        .detail-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--brand-red), transparent); opacity: 0; transition: 0.4s; }
+        .detail-card:hover::before { opacity: 1; }
+        .detail-card:hover { border-color: rgba(255, 255, 255, 0.15); transform: translateY(-8px); box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+        
+        .dc-icon-wrapper { width: 60px; height: 60px; border-radius: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 25px; }
+        .dc-icon-wrapper i { font-size: 1.8rem; color: var(--text-main); }
+        .dc-icon-wrapper.red { background: rgba(244, 44, 51, 0.1); border-color: rgba(244, 44, 51, 0.2); } .dc-icon-wrapper.red i { color: var(--brand-red); }
+        .dc-icon-wrapper.blue { background: rgba(0, 180, 255, 0.1); border-color: rgba(0, 180, 255, 0.2); } .dc-icon-wrapper.blue i { color: var(--accent-blue); }
+        
+        .dc-title { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800; margin-bottom: 1.5rem; color: #fff; line-height: 1.2; }
+        .dc-text { font-size: 1.15rem; color: #b0b5be; line-height: 1.7; margin-bottom: 25px; font-weight: 400; }
+        
+        .feature-list { list-style: none; margin-top: 15px; }
+        .feature-list li { position: relative; padding-left: 38px; margin-bottom: 20px; font-size: 1.1rem; color: #d1d5db; line-height: 1.6; }
+        .feature-list li::before { content: '\f058'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: 0; top: 3px; color: var(--accent-green); font-size: 1.3rem; }
+        .feature-list.dev li::before { color: var(--accent-orange); content: '\f013'; }
+        .feature-list.blue li::before { color: var(--accent-blue); content: '\f0da'; }
+
+        /* Profile Visionary Card (Enterprise Upgrade) */
+        .profile-container { display: grid; grid-template-columns: 1.2fr 2fr; gap: 50px; align-items: stretch; margin-top: 20px; }
+        .profile-image-col {
+            background: linear-gradient(160deg, rgba(30,30,35,0.8), rgba(10,10,15,0.9)); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 50px 40px;
+            display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .profile-image-col::after { content: ''; position: absolute; width: 250px; height: 250px; background: var(--brand-red); filter: blur(120px); opacity: 0.15; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .profile-avatar { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.1); padding: 5px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; z-index: 2; margin-bottom: 25px; transition: 0.5s; }
+        .profile-avatar:hover { transform: scale(1.05); border-color: var(--brand-red); }
+        .profile-name { font-family: 'Outfit'; font-size: 2.2rem; font-weight: 900; color: #fff; position: relative; z-index: 2; margin-bottom: 5px; }
+        .profile-tag { font-size: 0.85rem; background: var(--brand-red); color: #fff; padding: 6px 16px; border-radius: 50px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; z-index: 2; position: relative; }
+        
+        .profile-stats { margin-top: 40px; font-size: 0.95rem; color: #a1a6b0; text-align: left; width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; position: relative; z-index: 2; }
+        .profile-stats div { display: flex; align-items: center; gap: 15px; margin-bottom: 18px; font-weight: 500; }
+        .profile-stats i { color: var(--brand-red); width: 24px; text-align: center; font-size: 1.2rem; }
+        
+        .profile-text-col {
+            background: var(--bg-panel); backdrop-filter: blur(25px); border: 1px solid var(--border-glass); border-radius: 24px; padding: 4rem;
+            font-size: 1.2rem; color: #b0b5be; line-height: 1.8; display: flex; flex-direction: column; justify-content: center;
+        }
+        .profile-quote { font-family: 'Outfit'; font-size: 2rem; color: #fff; font-weight: 300; line-height: 1.4; margin-bottom: 40px; border-left: 5px solid var(--brand-red); padding-left: 30px; }
+
+        /* Timeline / History */
+        .timeline { position: relative; max-width: 1100px; margin: 3rem 0; padding-left: 50px; border-left: 2px solid rgba(255,255,255,0.1); }
+        .timeline-item { position: relative; margin-bottom: 4.5rem; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -59px; top: 8px; width: 16px; height: 16px; border-radius: 50%;
+            background: var(--bg-dark); border: 4px solid var(--brand-red); box-shadow: 0 0 20px var(--brand-red-glow);
+        }
+        .timeline-item.done::before { border-color: var(--accent-green); box-shadow: 0 0 20px rgba(0,230,118,0.4); }
+        .t-title { font-family: 'Outfit'; font-size: 1.9rem; font-weight: 800; color: #fff; margin-bottom: 15px; }
+        .t-desc { color: #a1a6b0; line-height: 1.7; font-size: 1.15rem; max-width: 850px; }
+
+        /* Highlight Boxes (Roadmap) */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(0,0,0,0.5));
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 3.5rem; margin-bottom: 2.5rem;
+            border-left: 6px solid var(--brand-red); transition: 0.4s; box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        .highlight-box:hover { background: linear-gradient(135deg, rgba(244,44,51,0.05), rgba(0,0,0,0.5)); transform: translateX(12px); border-color: rgba(255,255,255,0.15); }
+        .highlight-title { font-family: 'Outfit'; font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; }
+        .highlight-title i { color: var(--brand-red); font-size: 2.2rem; background: rgba(244,44,51,0.1); padding: 15px; border-radius: 14px; }
+        
+        /* Step Box (Wizard) */
+        .step-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .step-box {
+            background: rgba(15,15,20,0.8); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 2.5rem; transition: 0.3s;
+        }
+        .step-box:hover { border-color: rgba(255,255,255,0.2); background: rgba(25,25,32,0.9); transform: translateY(-5px); }
+        .step-box-title { color: var(--brand-red); font-weight: 900; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 15px; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
+        .step-num { background: rgba(244,44,51,0.1); color: var(--brand-red); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 900; }
+
+        /* Fake UI components for Salary Module */
+        .fake-ui-panel { background: #0c0c10; border: 1px solid #222; border-radius: 12px; padding: 20px; margin-top: 20px; }
+        .fake-ui-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #1a1a24; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+        .fake-ui-row:last-child { border-bottom: none; }
+        .val-green { color: var(--accent-green); }
+        .val-red { color: #ff4b4b; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Background Orbs -->
+    <div class="bg-orb red"></div>
+    <div class="bg-orb blue"></div>
+    <div class="bg-orb purple"></div>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-title">ПРУТКОН<span>ОС</span></div>
+            <div class="brand-subtitle">Видение и Стратегия</div>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="#hero" class="nav-link active"><i class="fa-solid fa-house"></i> Заставка</a></li>
+            
+            <div class="nav-group-title">Введение & Идеология</div>
+            <li class="nav-item"><a href="#s0-author" class="nav-link"><i class="fa-solid fa-user-astronaut"></i> Знакомство с Автором</a></li>
+            <li class="nav-item"><a href="#s1-goals" class="nav-link"><i class="fa-solid fa-bullseye"></i> Глобальная Миссия</a></li>
+            <li class="nav-item"><a href="#s1b-history" class="nav-link"><i class="fa-solid fa-code-branch"></i> Эволюция Системы</a></li>
+            <li class="nav-item"><a href="#s2-stages" class="nav-link"><i class="fa-solid fa-timeline"></i> Этапы Реализации</a></li>
+            <li class="nav-item"><a href="#s3-status" class="nav-link"><i class="fa-solid fa-chart-pie"></i> Объективные Факты (Метрики)</a></li>
+            
+            <div class="nav-group-title">Ядро Системы (100% Ready)</div>
+            <li class="nav-item"><a href="#s4-dashboard" class="nav-link"><i class="fa-solid fa-desktop"></i> Рабочий Стол Менеджера</a></li>
+            <li class="nav-item"><a href="#s5-calculator" class="nav-link"><i class="fa-solid fa-calculator"></i> Инженерная Смета</a></li>
+            <li class="nav-item"><a href="#s6-wizard" class="nav-link"><i class="fa-solid fa-wand-magic-sparkles"></i> 5 Шагов: Мастер Заказов</a></li>
+            <li class="nav-item"><a href="#s7-approval" class="nav-link"><i class="fa-solid fa-user-shield"></i> Иерархия Утверждений</a></li>
+            <li class="nav-item"><a href="#s8-crm" class="nav-link"><i class="fa-solid fa-handshake"></i> Интеграция с Bitrix24</a></li>
+            <li class="nav-item"><a href="#s9-import" class="nav-link"><i class="fa-solid fa-file-excel"></i> Умный Импорт (AI Маппинг)</a></li>
+            <li class="nav-item"><a href="#s10-catalog" class="nav-link"><i class="fa-solid fa-database"></i> Реестр и Модуль "Веник"</a></li>
+            <li class="nav-item"><a href="#s11-settings" class="nav-link"><i class="fa-solid fa-sliders"></i> Архитектура Справочников</a></li>
+            <li class="nav-item"><a href="#s12-print" class="nav-link"><i class="fa-solid fa-file-invoice"></i> Печать КП и Спецификаций</a></li>
+            
+            <div class="nav-group-title">Внедрение & Beta</div>
+            <li class="nav-item"><a href="#s13-payroll" class="nav-link"><i class="fa-solid fa-coins"></i> Модуль Зарплат (ФОТ)</a></li>
+            <li class="nav-item"><a href="#s14-ai" class="nav-link"><i class="fa-solid fa-robot"></i> AI-Анализ Текста</a></li>
+            
+            <div class="nav-group-title">Будущее Завода</div>
+            <li class="nav-item"><a href="#s15-biz" class="nav-link"><i class="fa-solid fa-chart-line"></i> Эффект от Оцифровки</a></li>
+            <li class="nav-item"><a href="#s16-roadmap" class="nav-link"><i class="fa-solid fa-rocket"></i> Глобальные Перспективы</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        
+        <!-- 0. HERO TITLE -->
+        <section id="hero" class="hero-section reveal">
+            <img src="logo.png" alt="Logo" class="hero-logo-img" onerror="this.src='https://ui-avatars.com/api/?name=П+О&background=f42c33&color=fff&size=160'">
+            <div class="hero-logo text-gradient">ПРУТКОН<span class="text-gradient-red">ОС</span></div>
+            <div class="hero-version"><i class="fa-solid fa-bolt"></i> СБОРКА v18.25.4 ENTERPRISE EDITION</div>
+            <p class="hero-subtitle">
+                Закрытая корпоративная презентация цифровой трансформации завода. От первого звонка клиента до выплаты премии рабочему — внутри единого, математически выверенного механизма.
+            </p>
+        </section>
+
+        <!-- 0.5 АВТОР ПРОЕКТА -->
+        <section id="s0-author" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge"><i class="fa-solid fa-user-tie"></i> Создатель</span>
+                <h1 class="section-title text-gradient">Давайте знакомиться.</h1>
+            </div>
+            
+            <div class="profile-container">
+                <div class="profile-image-col reveal delay-1">
+                    <img src="logo.png" onerror="this.src='https://ui-avatars.com/api/?name=Иван+Никитин&background=f42c33&color=fff&size=200'" alt="Иван Никитин" class="profile-avatar">
+                    <div class="profile-name">Иван Никитин</div>
+                    <div class="profile-tag">Руководитель Проекта / Архитектор</div>
+                    
+                    <div class="profile-stats">
+                        <div><i class="fa-solid fa-briefcase"></i> 5+ лет в управлении процессами</div>
+                        <div><i class="fa-solid fa-network-wired"></i> Экспертиза: AMO CRM, Телефония</div>
+                        <div><i class="fa-solid fa-users-gear"></i> Построение отделов и систем KPI</div>
+                        <div><i class="fa-solid fa-chart-line"></i> Вывод контакт-центров с нуля</div>
+                    </div>
+                </div>
+                
+                <div class="profile-text-col reveal delay-2">
+                    <div class="profile-quote">
+                        «Сложные системы не пишутся ради красивого кода. Они создаются для того, чтобы уничтожить хаос и заставить бизнес-процессы работать как швейцарские часы.»
+                    </div>
+                    
+                    <p style="margin-bottom: 25px;">
+                        За моими плечами руководство крупными Контакт-Центрами и отделами сбора данных (<i>«Эйчар Софт», «ТочноТест»</i>). Я годами выстраивал сложные архитектуры в AMO CRM, внедрял авто-бонок, телефонию и разрабатывал жесткие системы метрик и KPI для сотен сотрудников.
+                    </p>
+                    <p style="margin-bottom: 25px;">
+                        Когда я глубоко погрузился в производственные процессы завода, я увидел классическую проблему B2B сектора: <b>разрозненность и потерю данных</b>. Инженеры считают спецификации в Excel, менеджеры ведут сделки в CRM, а бухгалтерия начисляет зарплату в третьих программах. Информация теряется между отделами, возникают фатальные ошибки (human error), а расчеты КП затягиваются на часы.
+                    </p>
+                    <p style="color:#fff; font-weight: 600;">
+                        Я принял стратегическое решение — создать <span style="color:var(--brand-red);">ПРУТКОН ОС</span>. Это не просто очередная программа. Это концентрат моего 5-летнего управленческого опыта, превращенный в цифровое Ядро. Я лично спроектировал архитектуру так, чтобы система бесшовно объединила инженерную математику, управление продажами через Bitrix24 и точный расчет Фонда Оплаты Труда.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. ЦЕЛИ И ЗАДАЧИ -->
+        <section id="s1-goals" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge blue"><i class="fa-solid fa-bullseye"></i> Фундамент</span>
+                <h1 class="section-title text-gradient">Ради чего мы это делаем?</h1>
+                <p class="section-desc">У нас нет огромной команды сторонних программистов, но у нас есть ясное видение и страсть к бескомпромиссному качеству.</p>
+            </div>
+            
+            <div class="metrics-grid reveal delay-1">
+                <div class="metric-card">
+                    <div class="m-value">0<span>%</span></div>
+                    <div class="m-label">Вероятность просчитаться в марже при составлении КП менеджером.</div>
+                </div>
+                <div class="metric-card">
+                    <div class="m-value">2<span> мин</span></div>
+                    <div class="m-label">Среднее время от звонка клиента до выдачи готового чертежа и КП.</div>
+                </div>
+                <div class="metric-card">
+                    <div class="m-value">1<span> окно</span></div>
+                    <div class="m-label">Единый интерфейс для менеджера, без переключения между Word и Excel.</div>
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-card reveal delay-2">
+                    <div class="dc-icon-wrapper blue"><i class="fa-solid fa-globe"></i></div>
+                    <div class="dc-title">Глобальная Цель</div>
+                    <div class="dc-text">
+                        Построить 100% независимую, безотказную систему управления производством. Мы навсегда отказываемся от зоопарка разных таблиц, переписок и сторонних программ в пользу единого цифрового ядра.
+                    </div>
+                </div>
+                <div class="detail-card reveal delay-3">
+                    <div class="dc-icon-wrapper red"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="dc-title">Ключевые Задачи</div>
+                    <ul class="feature-list blue">
+                        <li><b>Исключить Human Error:</b> Автоматизировать просчеты маржи и материалоемкости (вес, количество прутков).</li>
+                        <li><b>Ускорить работу:</b> Сократить время создания заказа с 30 минут до пары кликов.</li>
+                        <li><b>Прозрачность бизнеса:</b> Дать руководству моментальный контроль над ФОТ, загрузкой цеха и статусом каждой сделки в реальном времени.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1B. ИСТОРИЯ ВЕРСИЙ -->
+        <section id="s1b-history" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge blue"><i class="fa-solid fa-code-branch"></i> Эволюция</span>
+                <h1 class="section-title text-gradient">История создания системы</h1>
+                <p class="section-desc">Мы не скачали эту программу из интернета. Мы вырастили её с нуля, проходя через пот, ошибки и сотни улучшений под реальные нужды цеха.</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item done reveal delay-1">
+                    <div class="t-title">v1.0 - Зарождение: Простые формы</div>
+                    <div class="t-desc">Первые версии были просто цифровой заменой калькулятора. Данные не сохранялись централизованно, система могла считать только простейшую сетку. Отсутствовала интеграция с CRM.</div>
+                </div>
+                <div class="timeline-item done reveal delay-2">
+                    <div class="t-title">v8.5 - Архитектура Каталога (PIM)</div>
+                    <div class="t-desc">Технологический прорыв. Появление базы данных, способной переварить тысячи товаров из Excel. Создан легендарный алгоритм "Веник" для чистки прайсов. Калькулятор научился понимать сложную математику наценки.</div>
+                </div>
+                <div class="timeline-item done reveal delay-1">
+                    <div class="t-title">v15.0 - Эра Интеграции</div>
+                    <div class="t-desc">Бесшовное подключение к Bitrix24. Менеджеры перестали дублировать данные руками. Система начала сама создавать сделки, искать контакты по номеру и переносить комментарии из интерфейса. Внедрен строгий ролевой доступ (Менеджер/Директор).</div>
+                </div>
+                <div class="timeline-item active reveal delay-2" style="border-left-color: var(--brand-red);">
+                    <div class="t-title" style="color: var(--brand-red);">v18.25 - Enterprise ERP (Текущая)</div>
+                    <div class="t-desc" style="color: #fff;">Полноценная корпоративная операционная система. Мощные дашборды, 5-шаговый Мастер Заказов с защитой от ошибок, автоматический расчет Фонда Оплаты Труда (ФОТ), AI-парсер запросов клиента и умное автоопределение колонок при импорте.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. ЭТАПЫ РЕАЛИЗАЦИИ -->
+        <section id="s2-stages" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge blue"><i class="fa-solid fa-route"></i> Roadmap</span>
+                <h1 class="section-title text-gradient">Этапы реализации проекта</h1>
+                <p class="section-desc">Как мы внедряем ПРУТКОН ОС в бизнес-процессы компании шаг за шагом.</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item done reveal">
+                    <div class="t-title">Этап 1: Архитектура и Продажи (Завершено)</div>
+                    <div class="t-desc">Создание базового ядра (Offline-First база данных). Разработка Инженерного Калькулятора и полная двусторонняя интеграция API с Bitrix24.</div>
+                </div>
+                <div class="timeline-item done reveal">
+                    <div class="t-title">Этап 2: PIM Каталог и Мастер (Завершено)</div>
+                    <div class="t-desc">Разработка единого Реестра на 10 000+ товаров. Внедрение продвинутого Мастера импорта прайс-листов Excel и модуля чистки базы. Создание 5-Шагового Мастера сборки заказов со Smart-поиском.</div>
+                </div>
+                <div class="timeline-item active reveal" style="border-left-color: var(--accent-orange);">
+                    <div class="t-title" style="color: var(--accent-orange);">Этап 3: Производство и Зарплаты (В Активной Фазе)</div>
+                    <div class="t-desc" style="color: #fff;">Оцифровка движения заказа по цеху (статусы "В проверке", "Производство"). Внедрение автоматического математического расчета Фонда Оплаты Труда (ФОТ) с учетом НДФЛ.</div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="t-title">Этап 4: Цех и Документооборот (Планирование)</div>
+                    <div class="t-desc">Генерация PDF-чертежей (Интеграция с КБ). Разработка UI-планшетов для Операторов ЧПУ станков. Автоматическая печать бухгалтерских и юридических документов.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. ТЕКУЩИЙ СТАТУС -->
+        <section id="s3-status" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge purple"><i class="fa-solid fa-chart-pie"></i> Сводка</span>
+                <h1 class="section-title text-gradient">Объективные цифры</h1>
+                <p class="section-desc">Наш продукт уже работает с реальными массивами данных.</p>
+            </div>
+            
+            <div class="metrics-grid reveal delay-1">
+                <div class="metric-card" style="border-top: 3px solid var(--accent-purple);">
+                    <div class="m-value" style="color: var(--accent-purple);">~1000</div>
+                    <div class="m-label">Реальных товарных позиций и комплектующих уже загружено и участвует в расчетах ежедневно.</div>
+                </div>
+                <div class="metric-card" style="border-top: 3px solid var(--accent-blue);">
+                    <div class="m-value" style="color: var(--accent-blue);">10 000<span>+</span></div>
+                    <div class="m-label">Протестированная пропускная способность PIM-каталога без потери скорости интерфейса браузера.</div>
+                </div>
+                <div class="metric-card" style="border-top: 3px solid var(--accent-green);">
+                    <div class="m-value" style="color: var(--accent-green);">100<span>%</span></div>
+                    <div class="m-label">Отказоустойчивость. Использование локальной БД защищает от падений интернета на заводе.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. ДАШБОРД МЕНЕДЖЕРА И РУКОВОДИТЕЛЯ -->
+        <section id="s4-dashboard" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge green"><i class="fa-solid fa-check-double"></i> 100% Внедрено</span>
+                <h1 class="section-title text-gradient">Рабочий Стол Руководителя</h1>
+                <p class="section-desc">Единый центр управления полетами. Полный визуальный контроль бизнеса за 1 секунду.</p>
+            </div>
+            
+            <div class="details-grid">
+                <div class="detail-card reveal delay-1" style="grid-column: 1 / -1;">
+                    <div class="dc-icon-wrapper green"><i class="fa-solid fa-table-columns"></i></div>
+                    <div class="dc-title">Дашборд и Канбан-логика</div>
+                    <ul class="feature-list">
+                        <li><b>Финансовая Панель:</b> В верхней части экрана динамически рассчитывается Общая Выручка предприятия и Индикатор Загрузки цеха (%). Это дает директору понимание: берем новые заказы или производство перегружено.</li>
+                        <li><b>Live-Поиск (0 ms delay):</b> Мощный поиск фильтрует тысячи сделок по Имени клиента, Номеру заказа или Артикулу без перезагрузки страницы. Это магия современного JavaScript.</li>
+                        <li><b>Канбан Статусов:</b> Заказы визуально разделены. "Новые" требуют внимания менеджера, "В проверке" ждут ответа директора, "Производство" — уже на станке. Через 3 дня после отгрузки заказ сам улетает в "Архив", чтобы не засорять экран.</li>
+                    </ul>
+                </div>
+                <div class="detail-card reveal delay-2" style="grid-column: 1 / -1;">
+                    <div class="dc-icon-wrapper blue"><i class="fa-solid fa-address-card"></i></div>
+                    <div class="dc-title">Интерактивная Карточка Сделки (Deal Card)</div>
+                    <div class="dc-text">Клик по сделке открывает её расширенный "паспорт", заменяя десяток вкладок в браузере.</div>
+                    <ul class="feature-list blue">
+                        <li><b>Корзина спецификаций:</b> Внутри лежит полный список всего, что менеджер насчитал для конвейера (прутки, замки, ремни, наценки, вес).</li>
+                        <li><b>Чат и Timeline:</b> Прямо в карточке можно оставить текстовый комментарий (например: "Клиент просит скидку"), который по API мгновенно улетит в Битрикс24 всем участникам сделки.</li>
+                        <li><b>Маршрутизация (Routing):</b> Из карточки менеджер одной кнопкой направляет процесс: "Отправить на проверку", "Распечатать КП", или "Отправить в цех".</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. КАЛЬКУЛЯТОР -->
+        <section id="s5-calculator" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge green"><i class="fa-solid fa-check-double"></i> 100% Внедрено</span>
+                <h1 class="section-title text-gradient">Инженерная Смета (Калькулятор)</h1>
+                <p class="section-desc">Ядро системы. Превращает сложные инженерные формулы в простой интерфейс.</p>
+            </div>
+            <div class="details-grid">
+                <div class="detail-card reveal">
+                    <div class="dc-icon-wrapper red"><i class="fa-solid fa-calculator"></i></div>
+                    <div class="dc-title">Безошибочная Математика</div>
+                    <ul class="feature-list">
+                        <li><b>Авто-расчет количества:</b> Менеджер вводит лишь габариты (Длину, Ширину, Шаг). Система сама делит длину на шаг, получая точное количество прутков. </li>
+                        <li><b>Расчет Массы:</b> Автоматически вычисляет общий вес металла, умножая количество на вес одного погонного метра из базы.</li>
+                        <li><b>Защита маржи:</b> В итоговую цену аппаратно "зашивается" коэффициент наценки компании. Продать в минус технически невозможно.</li>
+                        <li><b>Сложные Корзины:</b> Возможность собрать длинную спецификацию из нескольких разных транспортеров в один общий заказ-наряд клиента.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 5 ШАГОВ В ДЕТАЛЯХ -->
+        <section id="s6-wizard" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge green"><i class="fa-solid fa-check-double"></i> 100% Внедрено</span>
+                <h1 class="section-title text-gradient">5-Шаговый Конфигуратор (Wizard)</h1>
+                <p class="section-desc">Защита от ошибки (Foolproof). Мы не доверяем ручному заполнению. Система ведет менеджера за руку через строгий 5-этапный алгоритм.</p>
+            </div>
+            
+            <div class="step-grid">
+                <div class="step-box reveal delay-1">
+                    <div class="step-box-title"><div class="step-num">1</div> Идентификация Изделия</div>
+                    <p style="color:#b0b5be; font-size:1.05rem; line-height:1.6;">Ввод базовой информации. Артикул генерируется автоматически специальной кнопкой. Привязка к справочнику, выбор "Культуры" применимости и загрузка фото-образца.</p>
+                </div>
+                <div class="step-box reveal delay-2">
+                    <div class="step-box-title"><div class="step-num">2</div> Конфигурация Прутков</div>
+                    <p style="color:#b0b5be; font-size:1.05rem; line-height:1.6;">Менеджер задает физические габариты конвейера (Ширина, Длина, Шаг). Программа моментально рассчитывает <b>базовое количество прутков</b>. Далее из прайс-листа выбирается материал (сталь/оцинковка).</p>
+                </div>
+                <div class="step-box reveal delay-1">
+                    <div class="step-box-title"><div class="step-num">3</div> Тяговые элементы</div>
+                    <p style="color:#b0b5be; font-size:1.05rem; line-height:1.6;">Выбор "скелета" транспортера: ремни, цепи или ленты. В зависимости от выбранной длины на Шаге 2, алгоритм сам понимает, сколько погонных метров или звеньев потребуется.</p>
+                </div>
+                <div class="step-box reveal delay-2">
+                    <div class="step-box-title"><div class="step-num">4</div> Комплектующие (Smart Search)</div>
+                    <p style="color:#b0b5be; font-size:1.05rem; line-height:1.6;">Встроена умная поисковая строка по всем 1000+ деталям. Ищет по Артикулу и Имени, выдавая визуальные карточки с <b>фотографиями и ценой</b>. Количество деталей (заклепок, шайб) пересчитывается автоматически.</p>
+                </div>
+                <div class="step-box reveal delay-3" style="grid-column: 1 / -1; border-color:var(--brand-red); background:linear-gradient(145deg, rgba(244,44,51,0.08), rgba(10,10,15,0.9));">
+                    <div class="step-box-title" style="font-size:1.2rem; color:#fff;"><div class="step-num" style="background:var(--brand-red); color:#fff;">5</div> Панель Решений и Маршрутизация</div>
+                    <p style="color:#d1d5db; font-size:1.15rem; line-height:1.7;">
+                        Финальный экран. Здесь выбирается тип соединения конвейера (с фото-подсказками: механический, замок). <br><br>Здесь же находится жестко зашитая <b>Панель Решений</b>. Менеджер выбирает, что сделать с собранным заказом:<br>
+                        <b style="color:var(--brand-red);">1.</b> Сформировать Коммерческое Предложение (готовится к печати).<br>
+                        <b style="color:var(--brand-red);">2.</b> Сохранить с проверкой (Отправить на аудит Алексею Власову).<br>
+                        <b style="color:var(--brand-red);">3.</b> Сформировать задание на Чертеж (Передать в КБ Данилу).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. СИСТЕМА УТВЕРЖДЕНИЙ -->
+        <section id="s7-approval" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge green"><i class="fa-solid fa-check-double"></i> 100% Внедрено</span>
+                <h1 class="section-title text-gradient">Система Утверждений (Approve System)</h1>
+                <p class="section-desc">Жесткая иерархия доступов. Ни один сомнительный заказ не уходит в работу без ведома руководства.</p>
+            </div>
+            <div class="details-grid">
+                <div class="detail-card reveal">
+                    <div class="dc-icon-wrapper red"><i class="fa-solid fa-user-shield"></i></div>
+                    <div class="dc-title">Иерархия Решений</div>
+                    <ul class="feature-list">
+                        <li><b>Запрос сведений:</b> Если рядовой менеджер не уверен в параметрах (нестандартный шаг), он нажимает кнопку, и заказ замораживается в статусе "В проверке".</li>
+                        <li><b>Approval Box:</b> Кнопка "Утвердить чертеж" появляется на экране <b>только</b> у пользователя с правами Администратора или Руководителя. Обычный менеджер технически не может сам себе утвердить заказ.</li>
+                        <li><b>Блокировка редактирования:</b> Как только заказ утвержден и перешел в статус "Производство", кнопка "Редактировать параметры" скрывается на уровне кода. Никто не поменяет ТЗ задним числом.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. BITRIX24 -->
+        <section id="s8-crm" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge green"><i class="fa-solid fa-check-double"></i> 100% Внедрено</span>
+                <h1 class="section-title text-gradient">Экосистема Bitrix24</h1>
+                <p class="section-desc">Двусторонняя связь отделов продаж и производства. Мы исключили двойной ручной ввод данных.</p>
+            </div>
+            <div class="details-grid">
+                <div class="detail-card reveal">
+                    <div class="dc-icon-wrapper blue"><i class="fa-solid fa-cloud"></i></div>
+                    <div class="dc-title">Бесшовный Обмен API</div>
+                    <ul class="feature-list blue">
+                        <li><b>Авто-создание контактов:</b> Вводим номер телефона в ПРУТКОН ОС -> программа через Webhook ищет клиента в CRM. Если его нет — создает новую карточку лида за 1 секунду.</li>
+                        <li><b>Синхронизация Бюджетов:</b> Менеджер собрал сложную смету в Калькуляторе -> итоговая цена мгновенно обновляется в бюджете Сделки в Битриксе. Аналитика продаж всегда точна.</li>
+                        <li><b>Авто-постановка Задач:</b> Менеджер нажимает "Запросить утверждение" -> Битрикс сам ставит задачу "Срочно проверьте чертеж" на Директора с уведомлением в телефон.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. МАСТЕР ИМПОРТА ИЗ EXCEL -->
+        <section id="s9-import" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge green"><i class="fa-solid fa-check-double"></i> 100% Внедрено</span>
+                <h1 class="section-title text-gradient">Умный Мастер Импорта (AI Mapping)</h1>
+                <p class="section-desc">Настоящий технологический прорыв. Забудьте про ручной ввод тысяч позиций от поставщиков. Обновление прайса занимает 2 секунды.</p>
+            </div>
+            <div class="details-grid">
+                <div class="detail-card reveal delay-1" style="grid-column: 1 / -1;">
+                    <div class="dc-icon-wrapper red"><i class="fa-solid fa-microchip"></i></div>
+                    <div class="dc-title">Нейро-подобное определение колонок</div>
+                    <p class="dc-text">
+                        Когда поставщик присылает прайс-лист в Excel (<code>.xlsx</code>), он всегда имеет непредсказуемые названия колонок. Наш алгоритм делает грязную работу за вас:
+                    </p>
+                    <ul class="feature-list">
+                        <li><b>Считывание в браузере:</b> Загруженный тяжелый файл мгновенно парсится прямо на процессоре компьютера пользователя, обеспечивая феноменальную скорость загрузки.</li>
+                        <li><b>Анализ заголовков (Regex):</b> Программа сканирует шапку таблицы. Если алгоритм видит слова <i>"арт", "article", "код"</i> — он <b>сам автоматически</b> маппит (назначает) эту колонку как "Артикул". Если видит <i>"цена", "прайс", "руб"</i> — понимает, что это Цена.</li>
+                        <li><b>Бескодовый UI Маппинга:</b> Если алгоритм сомневается из-за странного форматирования поставщика, он рисует красивый интерфейс селекторов. Менеджер просто указывает: <i>"Столбец C — это Название"</i>. Никаких IT-знаний не требуется.</li>
+                        <li><b>Сверхзвуковая заливка:</b> Как только колонки связаны, загрузка 10 000 позиций в локальную базу <code>dbProducts</code> занимает доли секунды. Актуальные цены моментально применяются ко всем новым расчетам.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. КАТАЛОГ И ВЕНИК -->
+        <section id="s10-catalog" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge green"><i class="fa-solid fa-check-double"></i> 100% Внедрено</span>
+                <h1 class="section-title text-gradient">Реестр PIM и Модуль "Веник"</h1>
+                <p class="section-desc">Мощные корпоративные инструменты для поддержания абсолютной чистоты и консистентности номенклатуры.</p>
+            </div>
+            <div class="details-grid">
+                <div class="detail-card reveal">
+                    <div class="dc-icon-wrapper blue"><i class="fa-solid fa-broom"></i></div>
+                    <div class="dc-title">Санитар Базы Данных</div>
+                    <ul class="feature-list blue">
+                        <li><b>Массовая Очистка:</b> Наша авторская гордость. Одно нажатие кнопки "Запустить Веник" — и алгоритм выметает все пустые или битые строки из огромной базы.</li>
+                        <li><b>Склейка Дубликатов:</b> При импорте разных прайсов часто плодятся одинаковые болты. "Веник" автоматически находит дубликаты по Артикулу и аккуратно <b>склеивает их в одну единую карточку</b>, сохраняя историю изменения цены. База всегда идеально чистая, без мусора.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. НАСТРОЙКИ ПОЛЕЙ -->
+        <section id="s11-settings" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge green"><i class="fa-solid fa-check-double"></i> 100% Внедрено</span>
+                <h1 class="section-title text-gradient">Архитектура Справочников (UI Builder)</h1>
+                <p class="section-desc">Система не прибита гвоздями к коду. Она гибко настраивается под новые нужды бизнеса без участия разработчиков.</p>
+            </div>
+            <div class="details-grid">
+                <div class="detail-card reveal delay-1" style="grid-column: 1 / -1;">
+                    <div class="dc-icon-wrapper red"><i class="fa-solid fa-sliders"></i></div>
+                    <div class="dc-title">Динамическая Панель Управления</div>
+                    <ul class="feature-list">
+                        <li><b>Управление Справочниками без кода:</b> Если на заводе появился новый тип металла, новый цвет ленты или новая категория, руководителю не нужно вызывать программиста. Он заходит в панель "Справочники" и нажимает "Добавить". Это новое значение моментально появляется во всех выпадающих списках интерфейса у всего отдела продаж.</li>
+                        <li><b>Глобальные Финансовые Коэффициенты:</b> Прямо в настройках администратор может изменить налоговую ставку (НДФЛ), процент вычета в Фонд Оплаты Труда (ФОТ) или задать новую базовую наценку компании. Математика расчетов всей программы мгновенно перестроится.</li>
+                        <li><b>Структурированные базы:</b> Справочники (типы замков, культуры) хранятся в отдельных структурированных JSON-массивах, что делает базу данных невероятно легкой и быстрой на чтение.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 12. ПЕЧАТЬ КП -->
+        <section id="s12-print" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge green"><i class="fa-solid fa-check-double"></i> 100% Внедрено</span>
+                <h1 class="section-title text-gradient">Генерация Документов (КП)</h1>
+                <p class="section-desc">Превращаем сложный инженерный расчет в красивый и понятный для клиента документ за один клик.</p>
+            </div>
+            <div class="details-grid">
+                <div class="detail-card reveal">
+                    <div class="dc-icon-wrapper blue"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                    <div class="dc-title">Печать Спецификаций</div>
+                    <ul class="feature-list blue">
+                        <li>Как только корзина собрана в Калькуляторе или Мастере Заказов, менеджер просто нажимает кнопку "Печать".</li>
+                        <li>Программа <b>автоматически перестраивает интерфейс</b>: очищает экран от всех рабочих кнопок, убирает черные фоны дизайна и формирует строгий, светлый, профессиональный бланк Коммерческого Предложения.</li>
+                        <li>В бланке прописана подробнейшая спецификация изделия (размеры, шаг, итоговый вес металла), общая цена и контактные данные менеджера. Документ можно сразу выгрузить в PDF или пустить на принтер.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 13. БЕТА: ЗАРПЛАТЫ -->
+        <section id="s13-payroll" class="slide-section reveal" style="background:var(--bg-panel); border-top: 1px solid var(--border-glass);">
+            <div class="section-header">
+                <span class="section-badge orange"><i class="fa-solid fa-hammer"></i> В Тестировании</span>
+                <h1 class="section-title text-gradient">Модуль Зарплат (ФОТ)</h1>
+                <p class="section-desc">Автоматизация бухгалтерии: честный, математически выверенный расчет денег для каждого сотрудника без экселя.</p>
+            </div>
+            <div class="details-grid">
+                <div class="detail-card reveal delay-1" style="grid-column: 1 / -1; border-color: rgba(255, 145, 0, 0.4);">
+                    <div class="dc-icon-wrapper" style="background: rgba(255,145,0,0.1); border-color: rgba(255,145,0,0.2);"><i class="fa-solid fa-coins" style="color: var(--accent-orange);"></i></div>
+                    <div class="dc-title">Справедливое распределение прибыли</div>
+                    
+                    <div class="fake-ui-panel">
+                        <div class="fake-ui-row"><span>Маржа по заказу #10045:</span> <span class="val-green">250 000 ₽</span></div>
+                        <div class="fake-ui-row"><span>Отчисление в ФОТ (25%):</span> <span class="val-green">62 500 ₽</span></div>
+                        <div class="fake-ui-row"><span>Премия сотрудника (Доля 30% от ФОТ):</span> <span class="val-green">18 750 ₽</span></div>
+                        <div class="fake-ui-row"><span>Налог НДФЛ (13%):</span> <span class="val-red">- 2 437 ₽</span></div>
+                        <div class="fake-ui-row" style="font-weight: 900; color: #fff; font-size: 1.1rem; border-top: 1px solid #333; margin-top: 10px; padding-top: 15px;"><span>ИТОГО К ВЫПЛАТЕ:</span> <span class="val-green">16 313 ₽</span></div>
+                    </div>
+
+                    <ul class="feature-list dev" style="margin-top: 30px;">
+                        <li>Программа сама берет чистую маржу от переведенных в статус "Архив/Завершен" сделок и автоматически откладывает глобальный процент в общий котел ФОТ.</li>
+                        <li>В настройках у каждого менеджера или рабочего задан его Оклад и его Индивидуальная Доля (%) от ФОТ.</li>
+                        <li>Система <b>мгновенно высчитывает премию</b>, сама вычитает 13% налогов и показывает директору точную сумму "На руки".</li>
+                        <li>Нажатие кнопки "Выплатить" формирует неудаляемую ведомость в архиве выплат. Больше никаких споров с бухгалтерией.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 14. БЕТА: AI -->
+        <section id="s14-ai" class="slide-section reveal" style="background:var(--bg-panel); border-top: 1px solid var(--border-glass);">
+            <div class="section-header">
+                <span class="section-badge orange"><i class="fa-solid fa-robot"></i> R&D</span>
+                <h1 class="section-title text-gradient">AI-Анализ Текста (Smart Parser)</h1>
+                <p class="section-desc">Избавление менеджера от рутинного перепечатывания цифр из длинных писем клиентов.</p>
+            </div>
+            <div class="details-grid">
+                <div class="detail-card reveal" style="border-color: rgba(255, 145, 0, 0.4);">
+                    <div class="dc-icon-wrapper" style="background: rgba(255,145,0,0.1); border-color: rgba(255,145,0,0.2);"><i class="fa-solid fa-brain" style="color: var(--accent-orange);"></i></div>
+                    <div class="dc-title">Чтение запросов</div>
+                    <ul class="feature-list dev">
+                        <li>Менеджер просто копирует неструктурированное письмо клиента (<i>"Добрый день, нам нужна сетка из стали длина 5000 ширина 800"</i>) и вставляет в окно парсера.</li>
+                        <li>Программа сканирует текст, <b>сама находит слова-триггеры "длина", "ширина"</b> и забирает цифры рядом с ними, моментально подставляя их в соответствующие поля калькулятора.</li>
+                        <li>В данный момент мы улучшаем точность алгоритма (R&D), чтобы он понимал опечатки клиента и конвертировал разные единицы измерения (метры в миллиметры).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 15. СТРАТЕГИЯ -->
+        <section id="s15-biz" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge blue"><i class="fa-solid fa-chart-line"></i> Бизнес-Стратегия</span>
+                <h1 class="section-title text-gradient">Доказанный Эффект от Оцифровки</h1>
+            </div>
+            <div class="details-grid">
+                <div class="detail-card reveal delay-1">
+                    <div class="dc-icon-wrapper blue"><i class="fa-solid fa-fingerprint"></i></div>
+                    <div class="dc-title">Тотальная Оцифровка</div>
+                    <p style="color:#b0b5be; line-height:1.7;">
+                        Мы переводим завод из эпохи блокнотов в цифру. Каждый болт, каждый заказ, каждый рубль ФОТ отныне имеют свой цифровой след в базе. Наличие "Журнала аудита" гарантирует, что мы всегда знаем, <b>кто, когда и с какого компьютера</b> изменил любой параметр. Пропажа информации невозможна.
+                    </p>
+                </div>
+                <div class="detail-card reveal delay-2">
+                    <div class="dc-icon-wrapper red"><i class="fa-solid fa-gears"></i></div>
+                    <div class="dc-title">Беспощадная Автоматизация</div>
+                    <p style="color:#b0b5be; line-height:1.7;">
+                        Программа берет на себя ту работу, в которой человек обязательно ошибется. Она сама считает вес, сама склеивает дубликаты прайсов, сама обновляет суммы в CRM. Это напрямую <b>экономит до 40% рабочего времени менеджеров</b>, позволяя им заниматься главным — продавать больше и качественнее.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 16. ROADMAP (ПЕРСПЕКТИВЫ) -->
+        <section id="s16-roadmap" class="slide-section reveal" style="background: rgba(0,0,0,0.6); border-top: 1px solid var(--border-glass);">
+            <div class="section-header">
+                <span class="section-badge"><i class="fa-solid fa-rocket"></i> Future Vision</span>
+                <h1 class="section-title text-gradient">Куда мы идем? (Вектор Развития)</h1>
+                <p class="section-desc">Оцифровка офиса — это лишь начало. Мы выходим на мощности цеха. Наша цель — завод, работающий как единый организм с минимальным вмешательством человека в рутину.</p>
+            </div>
+            
+            <div class="details-grid">
+                <div class="highlight-box reveal delay-1">
+                    <div class="highlight-title"><i class="fa-solid fa-pen-ruler"></i> Авто-Чертежи (КБ ДАНИЛ)</div>
+                    <p style="color: #b0b5be; line-height: 1.7; font-size: 1.1rem;">
+                        <b style="color:#fff;">Проблема:</b> Инженеры тратят многие часы на монотонное вычерчивание стандартных лент и замков в AutoCAD. <br><br>
+                        <b style="color:var(--accent-green);">Перспектива:</b> Забрав точные математические данные из Калькулятора (Шаг/Длина/Замок), ПРУТКОН ОС <b>сама сгенерирует готовый технический чертеж в PDF по строгим стандартам ГОСТ</b>. Роль инженера сведется лишь к финальной визуальной проверке и утверждению кнопкой.
+                    </p>
+                </div>
+
+                <div class="highlight-box reveal delay-2">
+                    <div class="highlight-title"><i class="fa-solid fa-tablet-screen-button"></i> UI-Терминалы ЧПУ Станков</div>
+                    <p style="color: #b0b5be; line-height: 1.7; font-size: 1.1rem;">
+                        <b style="color:#fff;">Проблема:</b> Рабочие получают бумажные распечатки заказ-нарядов, которые теряются, путаются или пачкаются в масле. <br><br>
+                        <b style="color:var(--accent-green);">Перспектива:</b> Установка ударопрочных планшетов у рабочих столов (Модуль Production UI). Оператор станка видит перед собой очередь заказов, видит только допуски для гибки (без финансовых цифр сделки) и по готовности нажимает "Деталь выполнена". Офис мгновенно видит прогресс производства в дашборде.
+                    </p>
+                </div>
+
+                <div class="highlight-box reveal delay-1">
+                    <div class="highlight-title"><i class="fa-solid fa-file-contract"></i> Электронный Юр. Отдел</div>
+                    <p style="color: #b0b5be; line-height: 1.7; font-size: 1.1rem;">
+                        <b style="color:#fff;">Проблема:</b> Бухгалтер вручную вбивает ИНН клиента в шаблон договора Word, допуская опечатки. <br><br>
+                        <b style="color:var(--accent-green);">Перспектива:</b> Авто-генерация Договоров, Счетов и УПД. Система по API забирает реквизиты компании из карточки Bitrix24 и подставляет их в нужные юридические бланки в 1 клик, формируя PDF с факсимиле подписи.
+                    </p>
+                </div>
+                
+                <div class="highlight-box reveal delay-2">
+                    <div class="highlight-title"><i class="fa-solid fa-warehouse"></i> Умный Склад без Завсклада</div>
+                    <p style="color: #b0b5be; line-height: 1.7; font-size: 1.1rem;">
+                        <b style="color:#fff;">Проблема:</b> Инвентаризация проводится раз в месяц с остановкой работы цеха, часто выявляются недостачи мелких деталей. <br><br>
+                        <b style="color:var(--accent-green);">Перспектива:</b> Автоматическое точное списание прутков, шайб и цепей в момент перевода заказа менеджером в статус "Производство". Система сама мониторит остатки и присылает автоматическое уведомление закупщику о нехватке материалов (формирует драфт предзаказа).
+                    </p>
+                </div>
+            </div>
+            
+            <div class="reveal delay-3" style="text-align: center; margin-top: 8rem; padding-bottom: 5rem;">
+                <h2 style="font-family: 'Outfit'; font-size: 4.5rem; font-weight:900; color: #fff; margin-bottom: 1.5rem; letter-spacing: -2px;">Мы строим 100% Автоматизацию.</h2>
+                <p style="color: var(--accent-blue); font-size: 1.5rem; font-weight: 600;">ПРУТКОН ОС — мощнейший технологический актив, преумножающий прибыль компании.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Advanced Intersection Observer for smooth reveal animations
+        const observerOptions = {
+            root: document.querySelector('.main-content'),
+            rootMargin: '0px',
+            threshold: 0.12
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // Sync Sidebar Navigation with Scroll Position
+        const sections = document.querySelectorAll('.slide-section, .hero-section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mainContent = document.querySelector('.main-content');
+
+        mainContent.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(sec => {
+                const secTop = sec.offsetTop;
+                const secHeight = sec.clientHeight;
+                if (mainContent.scrollTop >= (secTop - secHeight / 3)) {
+                    current = sec.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                    // Ensure active link is visible in sidebar
+                    link.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
+            });
+        });
+
+        // Smooth Scroll clicking on Nav
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                mainContent.scrollTo({
+                    top: targetSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -3,553 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Пруткон | ERP & Производство</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <title>Пруткон ОС | Консоль управления</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..700;1,100..700&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=18.1.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="with-hero-bg">
     <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar no-print" id="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <div class="logo-icon"><i class="fa-solid fa-industry"></i></div>
-                    <span class="logo-text">ПРУТКОН</span>
-                </div>
-            </div>
-            
-            <nav class="sidebar-nav">
-                <ul class="nav-list">
-                    <li class="nav-item active" data-target="dashboard">
-                        <i class="fa-solid fa-chart-pie nav-icon"></i><span class="nav-label">Дашборд</span>
-                    </li>
-                    <li class="nav-item" data-target="calculator">
-                        <i class="fa-solid fa-calculator nav-icon"></i><span class="nav-label">Калькулятор КП</span>
-                    </li>
-                    <li class="nav-item" data-target="orders">
-                        <i class="fa-solid fa-clipboard-list nav-icon"></i><span class="nav-label">Заказы <span class="badge" id="orders-badge">4</span></span>
-                    </li>
-                    <li class="nav-item" data-target="production">
-                        <i class="nav-icon fa-solid fa-industry"></i> <span>Производство</span>
-                        <span class="badge" id="badge-prod">3</span>
-                    </li>
-                    <li class="nav-item" data-target="salary">
-                        <i class="nav-icon fa-solid fa-sack-dollar"></i> <span>ФОТ и ЗП</span>
-                    </li>
-                    <li class="nav-item" data-target="reports">
-                        <i class="nav-icon fa-solid fa-chart-line"></i> <span>Отчетность</span>
-                    </li>
-                    <li class="nav-item" data-target="settings">
-                        <i class="nav-icon fa-solid fa-gears"></i> <span>Настройки</span>
-                    </li>
-                </ul>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?name=Никитин+И&background=10b981&color=fff" alt="User" class="avatar">
-                    <div class="user-info">
-                        <span class="user-name">Никитин И.</span>
-                        <span class="user-role">Главный инженер</span>
-                    </div>
-                </div>
-            </div>
-        </aside>
+        <aside id="global-sidebar"></aside>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <header class="top-header no-print">
-                <div class="header-search hidden">
-                    <!-- Search moved to calc -->
-                </div>
-                <div class="header-actions" style="margin-left: auto;">
-                    <button class="action-btn" title="Печать экрана" onclick="window.print()"><i class="fa-solid fa-print"></i></button>
-                    <button class="action-btn" title="Уведомления"><i class="fa-regular fa-bell"></i><span class="dot"></span></button>
-                    <button class="btn btn-primary" onclick="document.querySelector('[data-target=\'calculator\']').click()"><i class="fa-solid fa-plus"></i> Новый расчет</button>
-                </div>
-            </header>
-
-            <!-- Dashboard View -->
             <section id="dashboard" class="view-section active">
-                <div class="view-header"><h2>Сводка предприятия</h2></div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon emerald"><i class="fa-solid fa-money-bill-trend-up"></i></div>
-                        <div class="stat-details"><span class="stat-title">Выручка (Завершено)</span><span class="stat-value dash-revenue">0 ₽</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon blue"><i class="fa-solid fa-box-open"></i></div>
-                        <div class="stat-details"><span class="stat-title">Активных заказов</span><span class="stat-value dash-orders-count">0 шт</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple"><i class="fa-solid fa-chart-bar"></i></div>
-                        <div class="stat-details"><span class="stat-title">Средний чек</span><span class="stat-value dash-avg-check">0 ₽</span></div>
-                    </div>
-                </div>
-                
-                <div class="dashboard-content mt-3">
-                    <div class="panel">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <h3><i class="fa-solid fa-gears emerald"></i> Оперативная загрузка оборудования</h3>
-                            <button class="btn btn-secondary" onclick="document.querySelector('[data-target=\'production\']').click()">Перейти в ЦЕХ <i class="fa-solid fa-arrow-right"></i></button>
-                        </div>
-                        <div id="dash-prod-queue" class="mt-3" style="display:flex; flex-direction:column; gap:15px;">
-                            <!-- Mirrored prod queue -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Production View -->
-            <section id="production" class="view-section">
-                <div class="view-header">
-                    <h2>Производственный терминал (ЦЕХ)</h2>
-                    <p>Отслеживание обработки заказов ("Новый", "В работе") на оборудовании в реальном времени</p>
-                </div>
-                <div class="panel">
-                    <h3>Терминал распределения нагрузки</h3>
-                    <div id="production-queue" class="mt-3" style="display:flex; flex-direction:column; gap:15px;">
-                        <!-- Dynamic from JS -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- Calculator View -->
-            <section id="calculator" class="view-section">
-                <!-- Huge beautiful Calculator Search -->
-                <div class="calc-huge-search no-print pos-rel">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="global-search" placeholder="Живой поиск по БД Справочников (Единая база изделий / фото)..." autocomplete="off">
-                    <div id="search-dropdown" class="search-dropdown hidden glass-panel" style="top: 65px; border: 1px solid rgba(255,255,255,0.1); width:100%"></div>
-                </div>
-
-                <div class="view-header no-print">
-                    <h2>Опросник (Конструктор-Смета)</h2>
-                    <p>Используйте умный поиск выше для моментального автозаполнения формы.</p>
-                </div>
-                
-                <div class="calculator-container print-area">
-                    <div class="print-only-header hidden" id="print-header-calc">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
-                            <div>
-                                <h2>ПРЕДВАРИТЕЛЬНОЕ КП / ОПРОСНИК</h2>
-                                <p><strong>Поставщик:</strong> ООО "ПРУТКОН"</p>
-                                <p><strong>Дата:</strong> <span class="today-date"></span></p>
-                            </div>
-                            <div style="text-align: right;">
-                                <img src="extracted_xlsx/xl/media/image11.jpg" style="height: 60px; object-fit: contain; filter: grayscale(1);" alt="Logo">
-                            </div>
-                        </div>
-                        <hr>
-                    </div>
-
-                    <div class="calc-main w-100">
-                        <form id="calc-form" class="glass-panel form-layout w-100 p-0 border-0 shadow-none">
-                            <div class="form-section glass-panel">
-                                <h3><i class="fa-solid fa-tractor emerald"></i> Данные техники</h3>
-                                <div class="form-grid">
-                                    <div class="form-group"><label>Артикул транспорта/детали</label><input type="text" id="calc-article" class="form-control" autocomplete="off" required></div>
-                                    <div class="form-group"><label>Бренд техники (Клиент)</label><input type="text" id="calc-brand" class="form-control" placeholder="Напр. Grimme"></div>
-                                    <div class="form-group"><label>Модель техники</label><input type="text" id="calc-model" class="form-control"></div>
-                                    <div class="form-group"><label>Тип транспортера</label>
-                                        <select id="calc-conv-type" class="form-control">
-                                            <option value="pickup">Приемный</option><option value="main">Основной</option><option value="sift">Просеивающий</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-section glass-panel mt-3">
-                                <h3><i class="fa-solid fa-arrows-left-right emerald"></i> Геометрия и Ремни (Для транспортеров)</h3>
-                                <div class="form-grid">
-                                    <div class="form-group"><label>Длина в кольцо (мм)</label><input type="number" id="calc-length" class="form-control" value="0"></div>
-                                    <div class="form-group"><label>Ширина (мм)</label><input type="number" id="calc-width" class="form-control" value="0"></div>
-                                    <div class="form-group"><label>Шаг прутка (мм)</label><input type="number" id="calc-pitch" class="form-control" value="0"></div>
-                                    <div class="form-group"><label>Ремни боковые</label><input type="text" id="calc-belts-side" class="form-control"></div>
-                                    <div class="form-group"><label>Тип замка</label><input type="text" id="calc-lock-type" class="form-control"></div>
-                                </div>
-                            </div>
-
-                            <div class="form-section glass-panel mt-3">
-                                <h3><i class="fa-solid fa-bars emerald"></i> Спецификация деталей</h3>
-                                <div class="table-responsive">
-                                    <table class="data-table">
-                                        <thead>
-                                            <tr><th>Наименование прутка/детали</th><th>Наличие</th><th>Шаг (через ск-ко шт)</th><th>Диаметр (мм)</th></tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td>Обычный прямой</td><td><input type="checkbox" id="calc-chk-str" class="big-chk"></td><td><input type="number" id="calc-stp-str" class="form-control" min="1" value="1"></td><td><input type="text" id="calc-dia-str" class="form-control" value="10"></td></tr>
-                                            <tr><td>Гнутый (с выгибом)</td><td><input type="checkbox" id="calc-chk-ben" class="big-chk"></td><td><input type="number" id="calc-stp-ben" class="form-control" value="1"></td><td><input type="text" id="calc-dia-ben" class="form-control" value="10"></td></tr>
-                                            <tr><td>Скобянка / Метизы (Доп.)</td><td><input type="checkbox" id="calc-chk-met" class="big-chk"></td><td colspan="2"><input type="text" id="calc-txt-met" class="form-control" placeholder="Укажите позицию"></td></tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <div class="form-actions no-print mt-3">
-                                <button type="button" class="btn btn-secondary" onclick="window.printCalc()"><i class="fa-solid fa-print"></i> Печать бланка КП</button>
-                                <button type="button" class="btn btn-primary" id="btn-calc-run"><i class="fa-solid fa-calculator"></i> Выполнить расчет к смете</button>
-                            </div>
-                        </form>
-
-                        <div id="calc-results-wrap" class="hidden">
-                            <div class="results-panel glass-panel mt-3">
-                                <div class="results-header no-print">
-                                    <h3>Предварительная Смета (Текущая позиция)</h3>
-                                </div>
-                                <div class="results-grid">
-                                    <div class="result-box total-price">
-                                        <span class="text-white">СТОИМОСТЬ ПОЗИЦИИ:</span><h2 id="calc-res-total" class="emerald">0 ₽</h2>
-                                    </div>
-                                    <div class="result-box details">
-                                        <div class="detail-row"><span>Кол-во прутков:</span><span id="calc-res-rods">0 шт</span></div>
-                                        <div class="detail-row"><span>Вес брутто:</span><span id="calc-res-weight">0 кг</span></div>
-                                    </div>
-                                </div>
-                                <div class="results-footer no-print">
-                                    <button class="btn btn-emerald w-100" onclick="window.addItemToBasket()"><i class="fa-solid fa-cart-plus"></i> Добавить в состав заказа</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Basket Module -->
-                        <div id="calc-basket-wrap" class="panel mt-3 no-print">
-                            <h3><i class="fa-solid fa-layer-group emerald"></i> Состав текущего заказа (Спецификация)</h3>
-                            <table class="data-table mt-3" id="calc-basket-table">
-                                <thead>
-                                    <tr>
-                                        <th>Наименование/Артикул</th>
-                                        <th>Параметры</th>
-                                        <th>Сумма</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="calc-basket-tbody">
-                                    <tr><td colspan="4" class="text-center neutral">Список пуст. Добавьте расчет выше.</td></tr>
-                                </tbody>
-                            </table>
-                            <div class="mt-3 text-right" style="text-align:right">
-                                <h3 class="emerald">ИТОГО ПО ЗАКАЗУ: <span id="calc-basket-total">0 ₽</span></h3>
-                                <button class="btn btn-primary mt-3" id="btn-create-order-final" onclick="window.createFinalOrder()"><i class="fa-solid fa-paper-plane"></i> Сформировать Заказ и передать в Производство</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Catalog View -->
-            <section id="catalog" class="view-section">
-                <div class="view-header">
-                    <h2>Справочники БД</h2>
-                    <p>Желтым подсвечены карточки с неполными данными.</p>
-                </div>
-                
-                <div class="tabs no-print glass-panel" id="catalog-tabs" style="padding: 10px; margin-bottom: 20px; display: flex; gap: 10px; overflow-x: auto;">
-                    <button class="btn btn-secondary active" data-cat="trans">Транспортеры</button>
-                    <button class="btn btn-secondary" data-cat="belts">Ремни конвейерные</button>
-                    <button class="btn btn-secondary" data-cat="hardware">Скобяные изделия</button>
-                    <button class="btn btn-secondary" data-cat="fasteners">Метизы</button>
-                    <button class="btn btn-secondary" data-cat="rods">Прутки и замки</button>
-                </div>
-
-                <div class="panel table-responsive">
-                    <table class="data-table" id="catalog-table">
-                        <!-- Dynamic content via JS -->
-                    </table>
-                </div>
-            </section>
-
-            <!-- Orders View -->
-            <section id="orders" class="view-section">
-                <div class="view-header">
-                    <h2>Журнал заказов (Счет-заказы)</h2>
-                </div>
-                <div class="panel">
-                    <table class="data-table" id="orders-table">
-                        <thead>
-                            <tr>
-                                <th>№ Заказа</th>
-                                <th>Дата</th>
-                                <th>Изделие/Артикул</th>
-                                <th>Сумма</th>
-                                <th>Статус</th>
-                                <th>Действия</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Dynamic content via JS -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <div id="print-bill-area" class="print-only-bill hidden print-area text-black bg-white">
-                    <div class="bill-header">
-                        <img src="extracted_xlsx/xl/media/image11.jpg" style="height:50px;filter:grayscale(1);">
-                        <h1>СЧЕТ-ЗАКАЗ № <span id="bill-num"></span></h1>
-                        <p>от <span id="bill-date"></span></p>
-                        <hr>
-                        <p><strong>Поставщик:</strong> ООО "ПРУТКОН"</p>
-                        <p><strong>Покупатель:</strong> Клиент</p>
-                    </div>
-                    <table border="1" style="width:100%; border-collapse: collapse; margin-top:20px;" cellpadding="8">
-                        <thead>
-                            <tr><th>№</th><th>Наименование товара</th><th>Кол-во</th><th>Ед.</th><th>Цена</th><th>Сумма</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>1</td><td id="bill-item"></td><td>1</td><td>шт/к-т</td><td id="bill-price"></td><td id="bill-sum"></td></tr>
-                        </tbody>
-                    </table>
-                    <h3 style="margin-top:20px; text-align:right;">Итого: <span id="bill-total"></span></h3>
-                    <p style="text-align:right;">Без налога (НДС).</p>
-                    <div style="margin-top:50px; display:flex; justify-content:space-between;">
-                        <span>Руководитель _________________ /Никитин И./</span>
-                        <span>Бухгалтер _________________ /Никитин И./</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- REPORTS VIEW -->
-            <section id="reports" class="view-section">
-                <div class="view-header">
-                    <h2>Аналитическая Отчетность</h2>
-                    <p>Сводные данные по выручке, производительности и рентабельности.</p>
-                </div>
-                
-                <div class="stats-grid mb-3">
-                    <div class="stat-card">
-                        <div class="stat-icon emerald"><i class="fa-solid fa-money-bill-trend-up"></i></div>
-                        <div class="stat-details">
-                            <span class="stat-title">Прогноз выручки (Месяц)</span>
-                            <span class="stat-value" id="rep-total-rev">0 ₽</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon blue"><i class="fa-solid fa-truck-ramp-box"></i></div>
-                        <div class="stat-details">
-                            <span class="stat-title">Отгружено изделий</span>
-                            <span class="stat-value" id="rep-completed-count">0 шт</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple"><i class="fa-solid fa-user-check"></i></div>
-                        <div class="stat-details">
-                            <span class="stat-title">Эффективность ФОТ</span>
-                            <span class="stat-value">25.0%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <h3><i class="fa-solid fa-chart-area blue"></i> Динамика производства (30 дней)</h3>
-                    <div style="height:250px; display:flex; align-items:flex-end; gap:5px; padding-top:20px; border-bottom:1px solid rgba(255,255,255,0.1); border-left:1px solid rgba(255,255,255,0.1);">
-                        <!-- CSS Mock Chart Bars -->
-                        <div style="flex:1; background:rgba(16, 185, 129, 0.2); height:40%; border-radius:4px 4px 0 0; position:relative;" title="1 Марта"><small style="position:absolute; bottom:-25px; left:0; width:100%; text-align:center; font-size:0.6rem">01.03</small></div>
-                        <div style="flex:1; background:rgba(16, 185, 129, 0.5); height:65%; border-radius:4px 4px 0 0; position:relative;" title="5 Марта"></div>
-                        <div style="flex:1; background:var(--neon-emerald); height:85%; border-radius:4px 4px 0 0; position:relative;" title="10 Марта"></div>
-                        <div style="flex:1; background:rgba(16, 185, 129, 0.3); height:50%; border-radius:4px 4px 0 0; position:relative;" title="15 Марта"></div>
-                        <div style="flex:1; background:rgba(16, 185, 129, 0.6); height:75%; border-radius:4px 4px 0 0; position:relative;" title="20 Марта"></div>
-                        <div style="flex:1; background:var(--accent-blue); height:95%; border-radius:4px 4px 0 0; position:relative;" title="Сегодня"><small style="position:absolute; bottom:-25px; left:0; width:100%; text-align:center; font-size:0.6rem">Тек.</small></div>
-                    </div>
-                    <p class="neutral mt-4 italic" style="font-style:italic; font-size:0.85rem">* Данные сгенерированы на основе истории транзакций и активных заказов за текущий расчетный период.</p>
-                </div>
-            </section>
-
-            <!-- Salary View -->
-            <section id="salary" class="view-section">
-                <div class="view-header">
-                    <h2>Фонд оплаты труда и Учет Зарплат</h2>
-                    <p>Автоматическое вычисление ФОТ (25% от выручки) и расчет НДФЛ.</p>
-                </div>
-                <div class="panel">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-                        <div style="display:flex; gap:15px; align-items:center;">
-                            <label style="color:var(--text-muted); font-weight:600;">Период начисления:</label>
-                            <input type="month" class="form-control" id="sal-period-sel" value="2026-03" style="width:150px; padding:6px 10px;">
-                        </div>
-                        <div style="display:flex; gap:10px;">
-                            <button class="btn btn-secondary" onclick="window.printSalary()"><i class="fa-solid fa-print"></i> Печать ведомости</button>
-                            <button class="btn btn-primary" onclick="window.paySalary()"><i class="fa-solid fa-money-bill-wave"></i> Провести выплату</button>
-                        </div>
-                    </div>
-                    <table class="data-table" id="salary-table">
-                        <thead>
-                            <tr>
-                                <th>ФИО Сотрудника</th>
-                                <th>Оклад (Фикс)</th>
-                                <th>Премия (ФОТ)</th>
-                                <th>Доп. Начисления</th>
-                                <th>Gross (Грязными)</th>
-                                <th>НДФЛ (13%)</th>
-                                <th>Net (К выплате)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="salary-tbody">
-                            <!-- Dynamic from JS -->
-                        </tbody>
-                    </table>
-                    <div style="margin-top:20px; text-align:right; font-size:1.1rem; line-height: 1.6;">
-                        <div>Итого ФОТ (Премии): <strong id="sal-total-prem" class="emerald">0 ₽</strong></div>
-                        <div>Итого к выплате (Net): <strong id="sal-total-net" class="blue">0 ₽</strong></div>
-                    </div>
-                </div>
-                
-                <div class="panel mt-3">
-                    <h3><i class="fa-solid fa-box-archive purple"></i> Архив Зарплат (Выплаты)</h3>
-                    <table class="data-table mt-3" id="salary-archive-table">
-                        <thead>
-                            <tr><th>Период</th><th>Итого Выплачено (Net)</th><th>Сотрудников</th><th>Действие</th></tr>
-                        </thead>
-                        <tbody id="salary-archive-tbody"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Settings View -->
-            <section id="settings" class="view-section">
-                <div class="view-header">
-                    <h2>Настройки Системы (ERP Ядро)</h2>
-                    <p>Настройте параметры сотрудников, интеграцию с Firebase и GitHub.</p>
-                </div>
-                <div class="form-grid">
-                    <div class="panel">
-                        <h3><i class="fa-solid fa-id-badge blue"></i> Управление Доступом (Сотрудники)</h3>
-                        <p class="neutral mb-3">Настройте роли и персональные пароли для каждого сотрудника.</p>
-
-                        <div id="settings-emp-list" class="mt-3" style="display:flex; flex-direction:column; gap:10px;">
-                            <!-- JS driven -->
-                        </div>
-                            <!-- JS driven -->
-                        </div>
-                        <button class="btn btn-secondary w-100 mt-3" onclick="window.addEmployee()"><i class="fa-solid fa-plus"></i> Добавить сотрудника</button>
-                    </div>
-                    <div class="panel">
-                        <h3><i class="fa-solid fa-cloud purple"></i> Облачная Синхронизация</h3>
-                        <div class="form-group mt-3">
-                            <label>Firebase Realtime DB URL</label>
-                            <input type="text" class="form-control" id="settings-firebase-url" placeholder="https://your-project.firebaseio.com">
-                        </div>
-                        <div class="form-group mt-3">
-                            <label>Firebase API Key</label>
-                            <input type="text" class="form-control" id="settings-firebase-key" placeholder="AIzaSy...">
-                        </div>
-                        <button class="btn btn-emerald w-100 mt-3" onclick="window.connectFirebase()"><i class="fa-solid fa-link"></i> Тест подключения к Firebase</button>
-                        
-                        <div class="mt-3 p-3" style="background:rgba(0,0,0,0.3); border-radius:8px; font-size:0.9rem; color:var(--text-muted);">
-                            <h4 class="text-white mb-2">Инструкция по подключению:</h4>
-                            1. Зарегистрируйтесь на <a href="https://firebase.google.com/" target="_blank">Firebase</a>.<br>
-                            2. Создайте новый проект "Пруткон ERP".<br>
-                            3. Перейдите в <b>Realtime Database</b> и нажмите "Create Database". Выберите сервер (Европа) и тестовый режим.<br>
-                            4. Скопируйте URL базы выше. Скопируйте ключи API из Project Settings.<br>
-                            5. Система автоматически начнет фоновую выгрузку массивов <code>orders</code>, <code>dbEmployees</code> и <code>dbSalArchive</code>.
-                        </div>
-                        
-                        <h3 class="mt-3"><i class="fa-brands fa-github"></i> Прямая выгрузка на GitHub (CI/CD)</h3>
-                        <button class="btn btn-secondary w-100 mt-3"><i class="fa-brands fa-git-alt"></i> Инициировать Git Push (Backup)</button>
-                    </div>
+                <div id="constructor-main">
+                    <!-- UI Blocks injected by core.js:renderConstructor -->
                 </div>
             </section>
         </main>
-        
-        <!-- Product Modal Overlay -->
-        <div class="modal-overlay" id="product-modal">
-            <div class="product-card">
-                <div class="pc-header">
-                    <span class="pc-title" id="pc-title">Карточка Товара</span>
-                    <button class="pc-close" id="btn-pc-close"><i class="fa-solid fa-times"></i></button>
-                </div>
-                <div class="pc-body">
-                    <div class="pc-image-wrapper">
-                        <img src="" alt="" id="pc-img" class="pc-image">
-                    </div>
-                    <div class="pc-info">
-                        <div class="pc-stat-row">
-                            <span class="pc-stat-label">Название/Артикул</span>
-                            <input type="text" id="pc-edit-art" class="pc-edit-input" style="width:200px" title="Отредактируйте название">
-                        </div>
-                        <div class="pc-stat-row">
-                            <span class="pc-stat-label">Цена в базе (₽)</span>
-                            <input type="number" id="pc-edit-price" class="pc-edit-input" style="width:120px" title="Отредактируйте цену">
-                        </div>
-                        <div class="pc-stat-row">
-                            <span class="pc-stat-label">Остаток на складе</span>
-                            <input type="number" id="pc-edit-stock" class="pc-edit-input" style="width:100px" title="Изменить количество">
-                        </div>
-                        <!-- Statistics Mock -->
-                        <div class="pc-stat-row" style="margin-top:10px; border:none"><span class="pc-stat-label"><i class="fa-solid fa-chart-bar purple"></i> Статистика заказов</span> <span class="pc-stat-val"><span id="pc-ordered-count">14</span> шт за 30 дней</span></div>
-                    </div>
-                </div>
-                <div class="pc-actions">
-                    <button class="btn btn-danger" id="btn-pc-del" style="margin-right:auto"><i class="fa-solid fa-trash"></i> Удалить позицию</button>
-                    <button class="btn btn-secondary" id="btn-pc-save"><i class="fa-solid fa-save"></i> Сохранить правки</button>
-                    <button class="btn btn-emerald" id="btn-pc-use"><i class="fa-solid fa-calculator"></i> Перенести в Опросник-Смету</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Login Overlay -->
-        <div class="modal-overlay active" id="login-modal" style="z-index: 9999; background: #0f172a radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.15) 0%, transparent 60%);">
-            <div class="login-wrapper" style="width:420px; padding:2px; border-radius:24px; background: linear-gradient(135deg, var(--neon-emerald), var(--accent-blue)); box-shadow: 0 30px 60px rgba(0,0,0,0.8);">
-                <div class="product-card" style="width:100%; text-align:center; padding:45px; border-radius:22px; border:none; background: #0f172a; margin:0;">
-                    <div class="mx-auto mb-4" style="width:80px; height:80px; background: rgba(16, 185, 129, 0.1); border-radius: 20px; display:flex; align-items:center; justify-content:center; margin:0 auto 25px auto;">
-                        <i class="fa-solid fa-industry emerald" style="font-size:2.5rem;"></i>
-                    </div>
-                    <h2 style="font-size:2.4rem; margin-bottom: 5px; font-family:'Outfit'">ПРУТКОН</h2>
-                    <p class="neutral mb-4" style="text-transform:uppercase; letter-spacing:2px; font-size:0.8rem">Engineering & Analytic Platform</p>
-                    
-                    <div class="form-group mt-4 text-left">
-                        <label class="neutral mb-1"><i class="fa-solid fa-user-tie"></i> Профиль сотрудника</label>
-                        <select id="login-role" class="form-control" style="border: 1px solid rgba(255,255,255,0.1); height:50px; background: rgba(255,255,255,0.03);">
-                            <!-- Dynamic Employees -->
-                        </select>
-                    </div>
-                    <div class="form-group mt-3 text-left">
-                        <label class="neutral mb-1"><i class="fa-solid fa-key"></i> Пароль доступа</label>
-                        <input type="password" id="login-pwd" class="form-control" placeholder="••••••" style="border: 1px solid rgba(255,255,255,0.1); height:50px; background: rgba(255,255,255,0.03); text-align:center; font-size:1.2rem; letter-spacing:4px;" autocomplete="current-password">
-                    </div>
-                    <button class="btn btn-emerald w-100 mt-4" style="height:55px; font-size:1.1rem" onclick="window.doLogin()">
-                        Войти в систему <i class="fa-solid fa-chevron-right" style="font-size:0.8rem; margin-left:10px;"></i>
-                    </button>
-                    
-                    <div class="mt-4 pt-3 border-top" style="border-top: 1px solid rgba(255,255,255,0.05); font-size:0.75rem; color:var(--text-muted);">
-                        &copy; 2026 ООО «ПРУТКОН». Все права защищены.
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-    <!-- Printable Payroll Data -->
-    <div id="print-salary-area" class="print-only-bill hidden print-area text-black bg-white">
-        <h2 style="text-align:center; font-family:sans-serif;">Расчетная ведомость ФОТ / Приказ о выплате зарплаты</h2>
-        <p><strong>Период:</strong> <span id="print-salary-period"></span></p>
-        <p><strong>Организация:</strong> ПРУТКОН.PRO</p>
-        <table border="1" cellpadding="8" cellspacing="0" style="width:100%; text-align:left; border-collapse:collapse; font-size:12px; font-family:sans-serif; margin-top:20px;">
-            <thead>
-                <tr>
-                    <th>ФИО Сотрудника</th>
-                    <th>Базовый Оклад</th>
-                    <th>Премия (Сдельно)</th>
-                    <th>Начислено (Gross)</th>
-                    <th>Удержано (НДФЛ 13%)</th>
-                    <th>К выплате (Net)</th>
-                    <th>Подпись сотрудника</th>
-                </tr>
-            </thead>
-            <tbody id="print-salary-tbody"></tbody>
-        </table>
-        <div style="margin-top:30px; font-family:sans-serif; font-size:14px;">
-            <p><strong>Итого к выплате (начиная с <span id="print-salary-date"></span>):</strong> <span id="print-salary-total"></span></p>
-            <br><br><br>
-            <p>Директор: _____________________ ( ___________ )</p>
-        </div>
     </div>
-    
-    <!-- Firebase SDKs (Compat versions) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-    <script src="excel_data.js"></script>
-    <script src="script.js?v=4"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script>window.DB_VERSION = "18.25.4";</script>
+    <script src="header.js?v=18.25.4"></script>
+    <script src="menu.js?v=18.25.4"></script>
+    <script src="footer.js?v=18.25.4"></script>
+    <script src="i18n.js?v=18.25.4"></script>
+    <script src="version_history.js?v=18.25.4"></script>
+    <script src="core.js?v=18.25.4"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const updateDate = () => {
+                const el = document.getElementById('dash-date');
+                if (el) {
+                    const d = new Date();
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    el.innerText = d.toLocaleDateString('ru-RU', options);
+                }
+            };
+
+            window.updateDashboardData = () => {
+                updateDate();
+                if(window.formatCurrency) {
+                    const ords = window.orders || [];
+                    let sum = 0; ords.forEach(o => sum += (parseFloat(o.total) || 0));
+                    
+                    const rev = document.getElementById('dash-revenue');
+                    const cnt = document.getElementById('dash-orders-count');
+                    const load = document.getElementById('dash-load-value');
+                    if (rev) rev.innerText = window.formatCurrency(sum);
+                    if (cnt) cnt.innerText = ords.length;
+                    if (load) {
+                        const loadPercent = Math.min(100, Math.round((ords.length / 20) * 100));
+                        load.innerText = `${loadPercent}%`;
+                    }
+                    
+                    const list = document.getElementById('dash-orders-list');
+                    if (list && ords.length > 0) {
+                        list.innerHTML = ords.slice(-5).reverse().map(o => `
+                            <tr>
+                                <td style="padding:15px 25px;">
+                                    <div class="text-bold text-white">${o.id || '---'}</div>
+                                    <div class="text-xs text-muted">${o.clientName || o.customer || 'Новый клиент'}</div>
+                                </td>
+                                <td><span class="badge status-info">${o.status || 'В работе'}</span></td>
+                                <td class="text-bold emerald text-right" style="padding-right:25px;">${window.formatCurrency(o.total)}</td>
+                            </tr>
+                        `).join('');
+                    } else if (list) {
+                        list.innerHTML = `<tr><td colspan="3" class="dash-empty">Нет заказов для отображения</td></tr>`;
+                    }
+                    
+                    const feed = document.getElementById('dash-audit-feed');
+                    if (feed && window.dbAuditLog) {
+                        const latest = window.dbAuditLog.slice(0, 10);
+                        if (!latest.length) {
+                            feed.innerHTML = `<div class="dash-empty">Журнал событий пока пуст</div>`;
+                            return;
+                        }
+                        feed.innerHTML = latest.map(l => `
+                            <div class="activity-item">
+                                <div class="flex justify-between mb-1">
+                                    <strong class="text-white">${l.user || 'Система'}</strong>
+                                    <span class="text-muted text-xs">${(l.ts || l.time || '').split(',')[1] || ''}</span>
+                                </div>
+                                <div style="color:var(--brand-red)">${l.action || 'Событие'}</div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            };
+
+            window.renderConstructor();
+            
+            window.addEventListener('db_updated', window.updateDashboardData);
+            window.addEventListener('ordersSynced', window.updateDashboardData);
+            setTimeout(window.updateDashboardData, 800);
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ПРУТКОН | Склад</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..700;1,100..700&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=18.1.1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .production-pipeline { display: flex; align-items: stretch; justify-content: space-between; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
+        .pipeline-stage { flex: 1; min-width: 220px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; }
+        .stage-header { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.9rem; color: #fff; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; display:flex; align-items:center; gap:8px;}
+        .stage-arrow { color: var(--brand-red); font-size: 1.5rem; display: flex; align-items: center; justify-content: center; }
+        .stage-body { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; }
+        .stage-desc { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.3; }
+    </style>
+</head>
+<body class="with-hero-bg">
+    <div class="app-container">
+        <aside id="global-sidebar"></aside>
+
+        <main class="main-content">
+            <header class="top-header no-print">
+                <div class="view-header"><h2>Склад и движение ТМЦ</h2></div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary btn-sm" onclick="window.refreshWarehouseData()"><i class="fa-solid fa-sync"></i> Обновить</button>
+                    <button class="btn btn-primary btn-sm" onclick="window.showNewOperationModal()"><i class="fa-solid fa-plus"></i> Новая операция</button>
+                </div>
+            </header>
+
+            <section class="view-section active">
+                <div class="module-shell">
+                    <div class="module-hero">
+                        <div class="module-hero-card">
+                            <h2 class="mb-2 text-white">Управление запасами и логика прихода на производство</h2>
+                            <p class="text-sm neutral">Отражение полного производственного цикла: металл &rarr; заготовка &rarr; пруток &rarr; спец-пруток.</p>
+                        </div>
+                        <div class="metric-strip" id="warehouse-metrics">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+
+
+                    <div class="grid grid-2 gap-4 mb-4">
+                        <div class="panel glass-panel">
+                            <h3 class="mb-4 emerald"><i class="fa-solid fa-cubes"></i> Остатки на складе</h3>
+                            <div class="table-wrapper">
+                                <table class="data-table" id="inventory-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Номенклатура</th>
+                                            <th>Тип</th>
+                                            <th style="text-align: right;">Доступно</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Injected by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="panel glass-panel">
+                            <h3 class="mb-4 blue"><i class="fa-solid fa-list-ul"></i> Последние операции</h3>
+                            <div class="activity-feed" id="warehouse-log">
+                                <!-- Injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for new operation -->
+    <div id="modal-new-operation" class="modal">
+        <div class="glass-panel" style="width: 800px; padding: 35px; position: relative; max-height: 90vh; display: flex; flex-direction: column;">
+            <button onclick="window.closeOperationModal()" style="position: absolute; right: 25px; top: 25px; background: none; border: none; color: #fff; font-size: 1.8rem; cursor: pointer; z-index: 10;">&times;</button>
+            <h3 class="mb-4 text-white"><i class="fa-solid fa-file-invoice"></i> Регистрация складской операции</h3>
+            
+            <form id="warehouse-op-form" style="flex: 1; overflow-y: auto; padding-right: 15px;">
+                <div class="form-group">
+                    <label>Тип операции</label>
+                    <select id="op-type" class="form-control" onchange="window.updateOperationForm()" style="border-color: var(--brand-red); border-width: 2px;">
+                        <optgroup label="Внешние поступления">
+                            <option value="in_metal">1. Приход: Металл (от поставщика)</option>
+                            <option value="in_belt">1. Приход: Лента (от поставщика)</option>
+                        </optgroup>
+                        <optgroup label="Внутреннее производство">
+                            <option value="prod_blank">2. Изготовление: Заготовка (из металла)</option>
+                            <option value="prod_straight">3. Изготовление: Пруток прямой (из заготовки)</option>
+                            <option value="prod_double">3. Изготовление: Сдвоенный пруток (из заготовки)</option>
+                            <option value="prod_bent">4. Изготовление: Гнутый пруток (из прямого)</option>
+                            <option value="prod_rubber">4. Изготовление: Обрезиненный пруток (из прямого)</option>
+                            <option value="prod_hedge">4. Изготовление: Ёжные/пальцевые прутки (из прямого)</option>
+                            <option value="prod_bent_rubber">5. Изготовление: Гнутый обрезиненный (из гнутого)</option>
+                        </optgroup>
+                        <optgroup label="Корректировки">
+                            <option value="write_off">Убыток: Списание / Брак</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="grid grid-2 gap-4">
+                    <!-- Column 1: Source and Quantity -->
+                    <div>
+                        <div class="form-group" id="op-source-group" style="display: none;">
+                            <label>Расход (<span id="op-source-label">Металл</span>)</label>
+                            <div id="op-source-select-wrapper" style="display: none; margin-bottom: 10px;">
+                                <select id="op-source-item-select" class="form-control" onchange="window.updateSourceHint()"></select>
+                            </div>
+                            <input type="text" id="op-source-qty" class="form-control" placeholder="Количество списания..." oninput="window.doBlankCalc()">
+                            <div class="text-xs text-muted mt-2" id="op-source-hint">Остаток: 0</div>
+                        </div>
+
+                        <div class="form-group" id="op-qty-group">
+                            <label>Приход (<span id="op-target-label">Металл</span>, кг/шт) <i class="fa-solid fa-calculator neutral" title="Авторасчет из кол-ва прутков"></i></label>
+                            <div class="grid grid-2 gap-2">
+                                <input type="text" id="op-qty" class="form-control" placeholder="Вес в кг..." oninput="window.onOperationFinancialCalc('qty')">
+                                <input type="text" id="op-qty-tonne" class="form-control" placeholder="Вес в тоннах..." oninput="window.onOperationFinancialCalc('qty_tonne')">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Specific helpers -->
+                    <div>
+                        <!-- Auto Calculator for Blanks -->
+                        <div id="blank-calc-group" style="display: none; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="text-sm mb-0"><i class="fa-solid fa-calculator"></i> Помощник: Расчет заготовок</h4>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="blank-calc-toggle" onchange="window.toggleBlankCalc()">
+                                    <span class="slider round"></span>
+                                    <span style="margin-left: 45px; font-size: 0.75rem; color: var(--text-muted);">Авторасчет</span>
+                                </label>
+                            </div>
+                            <div id="blank-calc-fields" style="display: none;">
+                                <div class="form-group mb-2">
+                                    <label class="text-xs text-muted">Металл из справочника</label>
+                                    <select id="calc-metal-select" class="form-control" onchange="window.doBlankCalc()"></select>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label class="text-xs text-muted">Длина 1 заготовки (мм)</label>
+                                    <input type="text" id="calc-blank-len" class="form-control" placeholder="Например: 1500" oninput="window.doBlankCalc()">
+                                </div>
+                                <div class="text-xs p-2 rounded mt-2" style="background: rgba(0,0,0,0.2); color: var(--brand-gold);" id="calc-blank-result">
+                                    Включите авторасчет и заполните поля.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Special block for Belt Specs -->
+            <div id="belt-specs-group" style="display: none; background: rgba(0,147,255,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(0,147,255,0.2); margin-bottom: 20px;">
+                <h4 class="text-sm blue mb-3" style="margin-top:0;"><i class="fa-solid fa-tape"></i> Спецификация партии ленты</h4>
+                <div class="grid grid-2 gap-3 mb-3">
+                    <div>
+                        <label class="text-xs" style="color:var(--text-muted); text-transform:uppercase; font-weight:700;">Рулонов (шт)</label>
+                        <input type="text" id="op-belt-rolls" class="form-control" placeholder="3">
+                    </div>
+                    <div>
+                        <label class="text-xs" style="color:var(--text-muted); text-transform:uppercase; font-weight:700;">Общий вес (кг)</label>
+                        <input type="text" id="op-belt-weight" class="form-control" placeholder="10000" oninput="window.onOperationFinancialCalc('qty')">
+                    </div>
+                </div>
+                <div class="grid grid-3 gap-3">
+                    <div>
+                        <label class="text-xs" style="color:var(--text-muted); text-transform:uppercase; font-weight:700;">Диаметр (мм)</label>
+                        <input type="text" id="op-belt-diameter" class="form-control" placeholder="1500">
+                    </div>
+                    <div>
+                        <label class="text-xs" style="color:var(--text-muted); text-transform:uppercase; font-weight:700;">Ширина (мм)</label>
+                        <input type="text" id="op-belt-width" class="form-control" placeholder="800">
+                    </div>
+                    <div>
+                        <label class="text-xs" style="color:var(--text-muted); text-transform:uppercase; font-weight:700;">Общ. длина (м)</label>
+                        <input type="text" id="op-belt-length" class="form-control" placeholder="200">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="incoming-fields" style="display: none; margin-top: 20px;">
+                <!-- Metal handbook select -->
+                <div id="incoming-metal-fields" style="display: none; background:rgba(0,200,83,0.05); padding:20px; border-radius:12px; border:1px solid rgba(0,200,83,0.2); margin-bottom:20px;">
+                    <h5 class="text-sm emerald mb-3"><i class="fa-solid fa-microchip"></i> Параметры металла</h5>
+                    <div class="form-group">
+                        <label class="text-xs" style="color:var(--text-muted); text-transform:uppercase; font-weight:700;">Номенклатура из справочника</label>
+                        <select id="op-metal-select" class="form-control" onchange="window.onMetalSelectChange()">
+                            <option value="">-- Выберите металл (необязательно) --</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-3 gap-3 mt-3">
+                        <div class="form-group mb-0">
+                            <label class="text-xs" style="color:var(--text-muted);">Кол-во прутков (шт)</label>
+                            <input type="text" id="op-bars-count" class="form-control" placeholder="850" oninput="window.onMetalManualCalc()">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="text-xs" style="color:var(--text-muted);">Длина прутка (мм)</label>
+                            <input type="text" id="op-bar-len" class="form-control" placeholder="6000" oninput="window.onMetalManualCalc()">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="text-xs" style="color:var(--text-muted);">Вес 1 м.п (кг)</label>
+                            <input type="text" id="op-weight-per-m" class="form-control" placeholder="0.616" oninput="window.onMetalManualCalc()">
+                        </div>
+                    </div>
+                    <div class="grid grid-3 gap-3 mt-3">
+                        <div class="form-group mb-0">
+                            <label class="text-xs" style="color:var(--text-muted);">Диаметр (мм)</label>
+                            <input type="text" id="op-diameter" class="form-control" placeholder="10" oninput="window.onMetalManualCalc()">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="text-xs" style="color:var(--text-muted);">Марка стали</label>
+                            <input type="text" id="op-steel-type" class="form-control" placeholder="60С2ХА" list="op-steel-types-list">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="text-xs" style="color:var(--text-muted);">№ Накладной</label>
+                            <input type="text" id="op-invoice-num" class="form-control" placeholder="НК-0001">
+                        </div>
+                    </div>
+                        <div class="form-group mb-0">
+                            <label class="text-xs" style="color:var(--text-muted);">Ставка НДС (коэф.)</label>
+                            <select id="op-vat-rate" class="form-control" onchange="window.onOperationFinancialCalc('vat_rate')">
+                                <option value="1.2">20%</option>
+                                <option value="1.22" selected>22%</option>
+                                <option value="1">Без НДС</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="text-xs" style="color:var(--brand-red);">Цена за Тонну (без НДС)</label>
+                            <input type="text" id="op-price-tonne" class="form-control" placeholder="112000" oninput="window.onOperationFinancialCalc('price_tonne')">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2 gap-4 mb-3">
+                    <div class="form-group mb-0">
+                        <label>Поставщик / Контрагент</label>
+                        <input type="text" id="op-supplier" class="form-control" placeholder="Выберите или введите..." list="op-suppliers-list">
+                    </div>
+                    <div class="form-group mb-0">
+                        <label>Место хранения (Склад)</label>
+                        <input type="text" id="op-destination" class="form-control" placeholder="Основной склад...">
+                    </div>
+                </div>
+
+                <div class="grid grid-2 gap-3" style="background:rgba(255,180,0,0.05); padding:15px; border-radius:12px; border:1px solid rgba(255,180,0,0.2); margin-bottom:15px;">
+                    <div class="form-group mb-0">
+                        <label class="text-xs" style="color:var(--brand-gold);">Цена за 1 кг (без НДС)</label>
+                        <input type="text" id="op-unit-price" class="form-control" placeholder="0.00" oninput="window.onOperationFinancialCalc('price')">
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="text-xs" style="color:var(--brand-gold);">Доставка общая (руб)</label>
+                        <input type="text" id="op-delivery-cost" class="form-control" placeholder="0.00" oninput="window.onOperationFinancialCalc('delivery')">
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="text-xs" style="color:var(--brand-gold);">Сумма БЕЗ НДС (руб)</label>
+                        <input type="text" id="op-sum-no-vat" class="form-control" placeholder="0.00" oninput="window.onOperationFinancialCalc('sum_no_vat')">
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="text-xs" style="color:var(--brand-gold);">Сумма С НДС (руб)</label>
+                        <input type="text" id="op-sum-vat" class="form-control" placeholder="0.00" oninput="window.onOperationFinancialCalc('sum_vat')">
+                    </div>
+                    <div class="form-group mb-0 col-span-2">
+                        <!-- Financial Results Summary -->
+            <div id="financial-summary-detailed" class="mb-4" style="display:none; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius:12px; overflow:hidden;">
+                <div style="background: rgba(255,255,255,0.05); padding: 10px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size:0.75rem; color:var(--brand-red); font-weight:700; text-transform:uppercase;">
+                    <i class="fa-solid fa-calculator"></i> Детализация стоимости погонного метра
+                </div>
+                <div class="grid grid-2 gap-0">
+                    <div style="padding: 15px; border-right: 1px solid rgba(255,255,255,0.1);">
+                        <div class="text-xs text-muted mb-2">БЕЗ НДС</div>
+                        <div style="font-size:0.8rem; margin-bottom:5px;">Цена м.п.: <span id="res-m-price-no-vat" class="text-white">0.00 руб</span></div>
+                        <div style="font-size:0.8rem; margin-bottom:5px;">Доставка м.п.: <span id="res-m-del-no-vat" class="text-white">0.00 руб</span></div>
+                        <div style="font-size:0.9rem; color:var(--brand-gold); border-top:1px solid rgba(255,255,255,0.1); padding-top:5px; margin-top:5px;">ИТОГО м.п.: <span id="res-m-total-no-vat">0.00 руб</span></div>
+                    </div>
+                    <div style="padding: 15px;">
+                        <div class="text-xs text-muted mb-2">С НДС</div>
+                        <div style="font-size:0.8rem; margin-bottom:5px;">Цена м.п.: <span id="res-m-price-vat" class="text-white">0.00 руб</span></div>
+                        <div style="font-size:0.8rem; margin-bottom:5px;">Доставка м.п.: <span id="res-m-del-vat" class="text-white">0.00 руб</span></div>
+                        <div style="font-size:0.9rem; color:var(--emerald-neon); border-top:1px solid rgba(255,255,255,0.1); padding-top:5px; margin-top:5px;">ИТОГО м.п.: <span id="res-m-total-vat">0.00 руб</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Общий результат себестоимости</label>
+                <input type="text" id="op-total-cost" class="form-control" style="font-weight:700; color:var(--brand-gold); background:rgba(255,180,0,0.1); border:1px solid var(--brand-gold);" readonly>
+            </div>
+                </div>
+
+                <div class="grid grid-3 gap-3" style="background:rgba(255,180,0,0.05); padding:15px; border-radius:8px; border:1px solid rgba(255,180,0,0.2); margin-bottom:15px;">
+                    <div class="form-group mb-0">
+                        <label class="text-xs" style="color:var(--brand-gold);">Цена за 1 ед. (руб)</label>
+                        <input type="text" id="op-unit-price" class="form-control" placeholder="0.00" oninput="window.calculateDeliveryCost()">
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="text-xs" style="color:var(--brand-gold);">Доставка общая (руб)</label>
+                        <input type="text" id="op-delivery-cost" class="form-control" placeholder="0.00" oninput="window.calculateDeliveryCost()">
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="text-xs" style="color:var(--brand-gold);">Себестоимость 1 ед.</label>
+                        <input type="text" id="op-total-cost" class="form-control text-bold" disabled value="0.00 руб">
+                    </div>
+                </div>
+            </div>
+
+            <div id="writeoff-fields" style="display: none; background:rgba(226,31,38,0.05); padding:15px; border-radius:8px; border:1px solid rgba(226,31,38,0.2); margin-bottom:15px;">
+                <div class="form-group mb-0">
+                    <label class="text-xs brand-red">Номенклатура для списания</label>
+                    <select id="op-writeoff-item" class="form-control" onchange="window.updateWriteoffHint()">
+                        <option value="metal">Металл</option>
+                        <option value="belt">Лента</option>
+                        <option value="blank">Заготовка</option>
+                        <option value="straight">Пруток прямой</option>
+                        <option value="double">Сдвоенный пруток</option>
+                        <option value="bent">Гнутый пруток</option>
+                        <option value="rubberized">Обрезиненный пруток</option>
+                        <option value="hedge">Ёжные прутки</option>
+                    </select>
+                    <div class="text-xs text-muted mt-2" id="op-writeoff-hint">Остаток: 0</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label id="op-comment-label">Комментарий / Ответственный</label>
+                <input type="text" id="op-comment" class="form-control" placeholder="Партия №123 / Исполнитель...">
+            </div>
+
+            <div id="op-live-summary" class="mb-4">
+                <!-- Живая сводка -->
+            </div>
+
+            <datalist id="op-steel-types-list"></datalist>
+            <datalist id="op-suppliers-list"></datalist>
+
+            <div class="flex justify-between items-center mt-4">
+                <button type="button" class="btn btn-secondary" onclick="window.closeOperationModal()">Отмена</button>
+                <button type="button" class="btn btn-primary" onclick="window.saveOperation()" style="min-width: 200px;"><i class="fa-solid fa-check-double"></i> Провести операцию</button>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="header.js?v=18.1.1"></script>
+    <script src="menu.js?v=18.1.1"></script>
+    <script src="footer.js?v=18.1.1"></script>
+    <script src="core.js?v=18.1.1"></script>
+    <script src="warehouse.js?v=1.0.0"></script>
+</body>
+</html>

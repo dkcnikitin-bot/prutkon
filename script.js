@@ -1,43 +1,5 @@
-// База данных
-const db = {
-    trans: [
-        { article: '100.22233', brand: 'Grimme', model: 'SE 150-60', type: 'pickup', length: 12000, width: 800, pitch: 40, beltsSide: 'R', beltsCenter: '', lock: 'Вулканиз.', price: 164500, img: 'image114.jpg' },
-        { article: '200.44455', brand: 'Ropa', model: 'Euro Tiger', type: 'main', length: 8000, width: 1000, pitch: 35, beltsSide: 'S', beltsCenter: '400, 400', lock: 'Механика', price: 92000, img: 'image14.png' },
-        { article: '300.77123', brand: 'Dewulf', model: 'RA3060', type: 'sift', length: 15500, width: 750, pitch: 32, beltsSide: 'DS', beltsCenter: '', lock: 'Вулканиз.', price: 215000, img: 'image16.jpg' },
-        { article: '400.88001', brand: 'AVR', model: 'Puma 3', type: 'main', length: 9000, width: 900, pitch: 42, beltsSide: 'R', beltsCenter: '300', lock: 'Механика', price: null, img: 'image18.jpg' },
-        { article: '500.11022', brand: 'Holmer', model: 'Terra DosT4', type: 'pickup', length: 6500, width: 850, pitch: 40, beltsSide: 'S', beltsCenter: '', lock: 'Вулканиз.', price: 105000, img: 'image20.jpg' },
-        { article: '600.55667', brand: 'Grimme', model: 'Evo 290', type: 'main', length: 11000, width: 1100, pitch: 50, beltsSide: 'DS', beltsCenter: '500', lock: 'Механика', price: 184000, img: 'image24.jpg' },
-        { article: '700.33445', brand: 'Ropa', model: 'Keiler 2', type: 'sift', length: 10500, width: 800, pitch: 36, beltsSide: 'R', beltsCenter: '', lock: 'Вулканиз.', price: null, img: 'image30.jpg' }
-    ],
-    belts: [
-        { type: 'R', w: 50, t: 10, holes: '32,40,50', dia: '8,10', price: 800 },
-        { type: 'S (с бортом)', w: 60, t: 15, holes: '40,50', dia: '10,11', price: 1200 },
-        { type: 'DS', w: 60, t: 15, holes: '50', dia: '10', price: null },
-        { type: 'N (HN)', w: 75, t: 20, holes: '40, 50', dia: '10, 11', price: 1850 },
-        { type: 'DNG', w: 100, t: 25, holes: '50', dia: '12', price: 2400 }
-    ],
-    hardware: [],
-    fasteners: [],
-    rods: [
-        { name: 'Обычный прямой пруток (Ст3/Пружинная)', dia: '10, 11, 12', price: 250 },
-        { name: 'Пруток с выгибом (Центральный)', dia: '10, 11', price: 320 },
-        { name: 'Сдвоенный пруток', dia: '11, 12', price: 850 },
-        { name: 'Замок шарнирный РТИ (в сборе)', dia: '-', price: 540 }
-    ]
-};
-
-// Генерация скобянки и метизов
-const realImages = ['image1.jpg','image10.jpg','image100.png','image101.png','image102.png','image103.png','image104.jpg','image106.png','image107.jpg','image108.png','image109.png','image11.jpg','image110.jpg','image111.png','image112.jpg','image113.png','image114.jpg','image115.jpg','image116.png','image117.jpg','image118.jpg','image119.jpg','image12.jpg','image120.jpg','image121.png','image122.png','image123.png','image124.jpg','image125.png','image126.jpg','image127.jpg','image128.jpg','image129.jpg','image13.png','image130.jpg','image131.jpg','image132.jpg','image133.jpg','image134.jpg','image135.jpg','image136.jpg','image137.jpg','image139.jpg','image14.png','image140.jpg','image141.jpg','image142.jpg','image143.jpg','image144.jpg','image145.jpg','image146.jpg','image147.jpg','image148.jpg','image149.jpg','image15.jpg','image150.jpg','image151.jpg','image152.png','image153.jpg','image154.jpg','image156.jpg','image157.jpg','image158.png','image16.jpg','image160.jpg','image161.png','image164.png','image166.png','image167.png','image168.png','image169.png','image17.png','image172.png','image173.jpg','image177.jpg','image178.jpg','image179.png','image18.jpg','image181.jpg','image182.jpg','image183.jpg','image184.jpg','image185.jpg','image19.png','image2.jpg','image20.jpg','image21.jpg','image22.png','image23.jpg','image24.jpg','image26.jpg','image27.jpg','image28.jpg','image29.jpg','image3.jpg','image30.jpg','image31.jpg','image32.jpg','image33.jpg','image34.jpg','image35.jpg','image36.jpg','image37.jpg','image38.jpg','image39.jpg','image4.jpg','image40.jpg','image41.jpg','image42.jpg','image43.jpg','image44.jpg','image45.png','image46.jpg','image47.jpg','image48.jpg','image49.jpg','image5.png','image50.jpg','image51.jpg','image52.png','image53.jpg','image56.jpg','image57.jpg','image58.jpg','image6.jpg','image7.png','image72.jpg','image73.jpg','image74.jpg','image77.jpg','image8.png','image80.png','image81.jpg','image83.jpg','image84.png','image85.jpg','image86.jpg','image87.jpg','image89.png','image9.jpg','image90.png','image91.png','image92.png','image93.jpg','image94.jpg','image95.jpg','image96.jpg','image97.png','image98.png'];
-
-realImages.forEach(function(img, index) {
-    if (index % 2 === 0) {
-        db.hardware.push({ name: 'Скобяное изделие (Арт. ' + (3000 + index) + ')', material: 'Ст3/Пластик', count: 10 * index, price: index % 5 === 0 ? null : (50 + index * 10), img: img });
-    } else {
-        db.fasteners.push({ name: 'Метиз/Деталь (Арт. ' + (5000 + index) + ')', material: 'Оцинк', count: 1000, price: 15, img: img });
-    }
-});
-
-// Заказы и производственный прогресс
+// Используем глобальные переменные из core.js
+// Заказы и производственный прогресс (могут быть переписаны из облака)
 let orders = [
     { id: 'ЗН-26042', date: '31.10.2026', art: '100.22233', brand: 'ОАО Агро-Регион', sum: 164500, status: 'В работе', progress: 40 },
     { id: 'ЗН-26041', date: '30.10.2026', art: 'Пруток сдвоенный (20шт)', brand: 'ИП Иванов (Ropa)', sum: 17000, status: 'Новый', progress: 0 },
@@ -64,32 +26,32 @@ function initApp() {
         dates[i].innerText = tdStr;
     }
 
-    // Логин и Доступ
-    window.sysPwd = '623401';
-    window.currentUser = null;
-
-    window.doLogin = function() {
-        var idx = document.getElementById('login-role').value;
-        var pwd = document.getElementById('login-pwd').value;
-        var emp = window.dbEmployees[idx];
-        
-        if (emp && pwd === emp.pwd) {
-            window.currentUser = emp;
-            document.getElementById('login-modal').classList.remove('active');
-            document.querySelector('.user-name').innerText = emp.name;
-            document.querySelector('.user-role').innerText = emp.role;
-            alert('С возвращением, ' + emp.name + '!');
-        } else {
-            alert('Неверный пароль доступа!');
+    // Авто-подключение к Firebase при наличии ключей (из core.js)
+    setTimeout(function() {
+        if(localStorage.getItem('fb_connected') === 'true' && window.connectFirebase) {
+            window.connectFirebase(true);
         }
-    };
+    }, 500);
 
-    window.changeSysPwd = function() {
-        var newP = document.getElementById('settings-sys-pwd').value;
-        if (newP.length < 4) return alert('Пароль слишком короткий!');
-        window.sysPwd = newP;
-        alert('Системный пароль успешно изменен на: ' + newP);
-    };
+    // Сессия восстановления (если не загружена из core.js)
+    if (!window.restoreSession) {
+        window.restoreSession = function() {
+            var savedLogin = localStorage.getItem('prutkon_login_idx');
+            if (savedLogin !== null && window.dbEmployees) {
+                var emp = window.dbEmployees[parseInt(savedLogin)];
+                if (emp) {
+                    window.currentUser = emp;
+                    document.getElementById('login-modal').classList.remove('active');
+                    try {
+                        document.querySelector('.user-name').innerText = emp.name;
+                        document.querySelector('.user-role').innerText = emp.role;
+                    } catch(e) {}
+                    console.log('Сессия восстановлена для: ' + emp.name);
+                }
+            }
+        };
+        window.restoreSession();
+    }
 
     // Навигация
     var navItems = document.querySelectorAll('.nav-item');
@@ -131,17 +93,17 @@ function initApp() {
                 return true;
             }
 
-            db.trans.forEach(function(t, idx) {
+            if (window.db && window.db.trans) window.db.trans.forEach(function(t, idx) {
                 var s = t.article + ' ' + t.model + ' ' + t.brand + ' транспортер';
                 if (matchKW(s)) results.push({ type: 'Транспортер', text: t.article + ' - ' + t.brand + ' ' + t.model, data: t, cat: 'trans', idx: idx });
             });
-            db.hardware.forEach(function(h, idx) {
+            if (window.db && window.db.hardware) window.db.hardware.forEach(function(h, idx) {
                 if (matchKW(h.name + ' ' + h.material)) results.push({ type: 'Скобянка', text: h.name, data: h, cat: 'hardware', idx: idx });
             });
-            db.fasteners.forEach(function(f, idx) {
+            if (window.db && window.db.fasteners) window.db.fasteners.forEach(function(f, idx) {
                 if (matchKW(f.name + ' ' + f.material)) results.push({ type: 'Метизы', text: f.name, data: f, cat: 'fasteners', idx: idx });
             });
-            db.rods.forEach(function(r, idx) {
+            if (window.db && window.db.rods) window.db.rods.forEach(function(r, idx) {
                 if (matchKW(r.name)) results.push({ type: 'Скобянка (Пруток)', text: r.name, data: r, cat: 'rods', idx: idx });
             });
 
@@ -217,7 +179,7 @@ function initApp() {
         btnCalcRun.addEventListener('click', function() {
             var art = document.getElementById('calc-article').value.trim();
             if (art === '') {
-                alert('Укажите артикул!');
+                window.showToast('Укажите артикул!', 'warning');
                 return;
             }
             
@@ -275,12 +237,37 @@ function initApp() {
         var art = document.getElementById('calc-article').value || 'Деталь';
         var totalStr = document.getElementById('calc-res-total').innerText;
         var totalVal = parseInt(totalStr.replace(/[^\d]/g, '')) || 0;
-        var desc = document.getElementById('calc-brand').value + ' ' + (parseFloat(document.getElementById('calc-length').value) || '');
+        var brand = document.getElementById('calc-brand').value || '';
+        var model = document.getElementById('calc-model').value || '';
         
-        window.calcBasket.push({ art: art, desc: desc, sum: totalVal });
+        // Сбор полной спецификации
+        var spec = {
+            art: art,
+            brand: brand,
+            model: model,
+            desc: brand + ' ' + (parseFloat(document.getElementById('calc-length').value) || ''),
+            sum: totalVal,
+            details: {
+                L: parseFloat(document.getElementById('calc-length').value) || 0,
+                W: parseFloat(document.getElementById('calc-width').value) || 0,
+                P: parseFloat(document.getElementById('calc-pitch').value) || 0,
+                rods: document.getElementById('calc-res-rods').innerText,
+                weight: document.getElementById('calc-res-weight').innerText,
+                type: document.getElementById('calc-conv-type').value,
+                belts: document.getElementById('calc-belts-side').value,
+                lock: document.getElementById('calc-lock-type').value,
+                features: []
+            }
+        };
+
+        if (document.getElementById('calc-chk-str').checked) spec.details.features.push('Прямой пруток (Ш:' + document.getElementById('calc-stp-str').value + ', D:' + document.getElementById('calc-dia-str').value + ')');
+        if (document.getElementById('calc-chk-ben').checked) spec.details.features.push('Гнутый пруток (Ш:' + document.getElementById('calc-stp-ben').value + ', D:' + document.getElementById('calc-dia-ben').value + ')');
+        if (document.getElementById('calc-chk-met').checked) spec.details.features.push('Скобянка: ' + document.getElementById('calc-txt-met').value);
+        
+        window.calcBasket.push(spec);
         renderBasket();
         document.getElementById('calc-results-wrap').classList.add('hidden');
-        alert('Позиция ' + art + ' добавлена в состав заказа!');
+        window.showToast('Позиция ' + art + ' добавлена в состав заказа!', 'success');
     };
 
     function renderBasket() {
@@ -311,7 +298,7 @@ function initApp() {
     };
 
     window.createFinalOrder = function() {
-        if (window.calcBasket.length === 0) return alert('Список изделий пуст!');
+        if (window.calcBasket.length === 0) return window.showToast('Список изделий пуст!', 'warning');
         
         var firstArt = window.calcBasket[0].art;
         var brand = document.getElementById('calc-brand').value || 'Н/Д';
@@ -320,7 +307,16 @@ function initApp() {
         var newId = 'ЗН-' + Math.floor(26000 + Math.random() * 1000);
         var artText = window.calcBasket.length > 1 ? firstArt + ' + ' + (window.calcBasket.length - 1) + ' поз.' : firstArt;
         
-        orders.unshift({ id: newId, date: tdStr, art: artText, brand: brand, sum: totalSum, status: 'Новый', progress: 0 });
+        orders.unshift({ 
+            id: newId, 
+            date: tdStr, 
+            art: artText, 
+            brand: brand, 
+            sum: totalSum, 
+            status: 'Новый', 
+            progress: 0,
+            items: JSON.parse(JSON.stringify(window.calcBasket)) // Сохраняем детализацию
+        });
         
         window.calcBasket = [];
         renderBasket();
@@ -328,12 +324,23 @@ function initApp() {
         renderOrders();
         renderProd();
         document.querySelector('[data-target="orders"]').click();
-        alert('Многопозиционный заказ ' + newId + ' успешно сформирован!');
+        window.showToast('Заказ ' + newId + ' успешно сформирован!', 'success');
     };
 
     // Отрисовка Справочников
     var catTabs = document.querySelectorAll('#catalog-tabs button');
     var catTable = document.getElementById('catalog-table');
+    if (catTabs.length > 0) {
+        for (var i = 0; i < catTabs.length; i++) {
+            catTabs[i].addEventListener('click', function(e) {
+                var c = e.target.getAttribute('data-cat');
+                for (var j = 0; j < catTabs.length; j++) catTabs[j].classList.remove('active');
+                e.target.classList.add('active');
+                renderCatTab(c);
+            });
+        }
+        renderCatTab('trans');
+    }
     
     // Глобальная функция выбора из каталога
     window.selectedProductForCalc = null;
@@ -348,11 +355,13 @@ function initApp() {
             window.selectedProductForCalc.category = typeStr;
             window.selectedProductForCalc.index = index;
             var m = document.getElementById('product-modal');
-            var img = res.data.img ? 'extracted_xlsx/xl/media/' + res.data.img : 'extracted_xlsx/xl/media/image11.jpg';
-            document.getElementById('pc-img').src = img;
+            var imgPath = res.data.img ? 'extracted_xlsx/xl/media/' + res.data.img : 'extracted_xlsx/xl/media/image11.jpg';
+            document.getElementById('pc-img').src = imgPath;
             document.getElementById('pc-title').innerText = 'Карточка: ' + res.type;
+            document.getElementById('pc-subtitle').innerText = 'Арт: ' + (res.data.article || res.data.name);
             
             document.getElementById('pc-edit-art').value = res.data.article || res.data.name;
+            document.getElementById('pc-edit-img').value = res.data.img || '';
             document.getElementById('pc-edit-price').value = res.data.price || 0;
             document.getElementById('pc-edit-stock').value = res.data.count || 0;
             
@@ -374,14 +383,37 @@ function initApp() {
             var data = db[cat][idx];
             data.price = parseFloat(document.getElementById('pc-edit-price').value) || 0;
             data.count = parseInt(document.getElementById('pc-edit-stock').value) || 0;
+            data.img = document.getElementById('pc-edit-img').value;
             var newName = document.getElementById('pc-edit-art').value;
             if(data.article !== undefined) data.article = newName;
             else data.name = newName;
             
             document.getElementById('product-modal').classList.remove('active');
             renderCatTab(cat);
+            if(window.fbPush) window.fbPush(); // Сразу в облако
         }
     });
+
+    window.openImageSelector = function() {
+        var wrap = document.getElementById('image-selector-wrap');
+        if (!wrap) return;
+        wrap.innerHTML = '';
+        realImages.forEach(function(img) {
+            var el = document.createElement('img');
+            el.src = 'extracted_xlsx/xl/media/' + img;
+            el.style = 'width:60px; height:60px; object-fit:cover; border-radius:8px; cursor:pointer; border:2px solid transparent; transition:0.2s;';
+            el.onclick = function() {
+                document.getElementById('pc-edit-img').value = img;
+                document.getElementById('pc-img').src = 'extracted_xlsx/xl/media/' + img;
+                // Highlight selected
+                var imgs = wrap.querySelectorAll('img');
+                for(var k=0; k<imgs.length; k++) imgs[k].style.borderColor = 'transparent';
+                el.style.borderColor = 'var(--neon-emerald)';
+            };
+            wrap.appendChild(el);
+        });
+        wrap.classList.toggle('hidden');
+    };
 
     var btnPcDel = document.getElementById('btn-pc-del');
     if(btnPcDel) btnPcDel.addEventListener('click', function() {
@@ -459,126 +491,132 @@ function initApp() {
         window.dbEmployees.push({ name: '', role: '', base: 0, share: 0 });
         renderEmpSettings();
     };
-    window.connectFirebase = function() {
-        // Финальная конфигурация для проекта "prutkon-41faf"
-        const firebaseConfig = {
-            apiKey: "AIzaSyCvUdwwNkhiGzUIQ6L_P8fx0Eaj6I3exKE",
-            authDomain: "prutkon-41faf.firebaseapp.com",
-            projectId: "prutkon-41faf", 
-            storageBucket: "prutkon-41faf.firebasestorage.app",
-            messagingSenderId: "658162506199",
-            appId: "1:658162506199:web:c5afdf6723327b00279392",
-            measurementId: "G-N052MJRD1H"
-        };
-
-        try {
-           if (firebase.apps.length === 0) {
-              firebase.initializeApp(firebaseConfig);
-           }
-           // Используем Firestore, так как пользователь ее создал
-           window.fbDB = firebase.firestore();
-           alert('Синхронизация ПРУТКОН через Cloud Firestore (проект «' + firebaseConfig.projectId + '») установлена!');
-           
-           // Pull & Push initial
-           window.fbPull();
-           window.fbPush();
-        } catch(e) {
-           alert('Ошибка Firebase Firestore: ' + e.message);
-        }
-    };
-
-    window.fbPush = function() {
+    // Firebase функции теперь определены в core.js - используем их оттуда
+    // Здесь только специфичная логика для заказов/производства
+    
+    // Расширяем fbListen для обновления локальных данных при изменениях в облаке
+    const originalFbListen = window.fbListen;
+    window.fbListen = function() {
         if (!window.fbDB) return;
-        window.fbDB.collection('erp_data').doc('current').set({
-            orders: orders,
-            employees: window.dbEmployees,
-            archive: window.dbSalArchive,
-            ts: Date.now()
-        }).catch(err => console.error('Push error:', err));
-    };
-
-    window.fbPull = function() {
-        if (!window.fbDB) return;
-        window.fbDB.collection('erp_data').doc('current').get().then(function(doc) {
+        console.log('📡 Запуск слушателя Cloud Firestore для заказов...');
+        
+        window.fbDB.collection('erp_data').doc('current').onSnapshot(function(doc) {
             if (doc.exists) {
                 var data = doc.data();
+                
+                // Проверяем, чтобы не зациклить пуш - обновляем только если TS в облаке новее
+                if (data.ts && window.lastLocalPush && data.ts <= window.lastLocalPush) return;
+
+                console.log('☁️ Получены данные из облака, обновляю локальные...');
+                
                 if (data.orders) orders = data.orders;
+                if (data.orders_archive) window.ordersArchive = data.orders_archive;
                 if (data.employees) window.dbEmployees = data.employees;
                 if (data.archive) window.dbSalArchive = data.archive;
+                if (data.catalog_db) {
+                    for(var key in data.catalog_db) {
+                        db[key] = data.catalog_db[key];
+                    }
+                }
+                
                 renderOrders();
+                renderArchive();
                 renderProd();
-                renderEmpSettings();
-                console.log('Данные успешно загружены из Cloud Firestore');
+                renderProd();
             }
-        }).catch(err => console.error('Pull error:', err));
-    };
-
-    // Обновленные функции рендера с авто-пушем в облако
-    var oldRenderOrders = renderOrders;
-    renderOrders = function() {
-        oldRenderOrders();
-        window.fbPush();
-    };
-
-    var oldRenderProd = renderProd;
-    renderProd = function() {
-        oldRenderProd();
-        window.fbPush();
-    };
-
-    var oldRenderEmp = renderEmpSettings;
-    renderEmpSettings = function() {
-        oldRenderEmp();
-        window.fbPush();
-    };
-
-    // Вызов один раз при инициализации
-    renderEmpSettings();
-
-    function renderCatTab(c) {
-        var html = '';
-        if (c === 'trans') {
-            html += '<thead><tr><th>Артикул</th><th>Бренд/Модель</th><th>Длина</th><th>Ширина</th><th>Шаг</th><th>Замок</th><th>Цена</th></tr></thead><tbody>';
-            db.trans.forEach(function(i, idx) {
-                var s = (!i.price || !i.lock) ? 'row-incomplete' : '';
-                html += '<tr class="' + s + '" style="cursor:pointer;" onclick="window.selectFromCatalog(&quot;trans&quot;, ' + idx + ')" title="Кликните для переноса в Калькулятор"><td>' + (i.img ? '<img src="extracted_xlsx/xl/media/' + i.img + '" style="height:30px;vertical-align:middle;margin-right:5px; border-radius:4px;">' : '') + i.article + '</td><td>' + i.brand + ' ' + i.model + '</td><td>' + i.length + '</td><td>' + i.width + '</td><td>' + i.pitch + '</td><td>' + i.lock + '</td><td>' + (i.price ? formatCurr(i.price) : '-') + '</td></tr>';
-            });
-            html += '</tbody>';
-        } else if (c === 'hardware' || c === 'fasteners') {
-            var nCat = c === 'hardware' ? 'Скобяные изделия' : 'Метизы и детали';
-            html += '<thead><tr><th>Фото (' + nCat + ')</th><th>Наименование / Артикул</th><th>Материал</th><th>В наличии</th><th>Цена (шт)</th></tr></thead><tbody>';
-            db[c].forEach(function(i, idx) {
-                var s = (!i.price) ? 'row-incomplete' : '';
-                html += '<tr class="' + s + '" style="cursor:pointer;" onclick="window.selectFromCatalog(&quot;' + c + '&quot;, ' + idx + ')" title="Кликните для переноса в Калькулятор"><td>' + (i.img ? '<img src="extracted_xlsx/xl/media/' + i.img + '" style="height:60px; object-fit:contain; border-radius:4px; border:1px solid rgba(255,255,255,0.1); background:#fff">' : 'Нет фото') + '</td><td><strong>' + i.name + '</strong></td><td>' + (i.material || '-') + '</td><td>' + (i.count || '-') + ' шт</td><td>' + (i.price ? formatCurr(i.price) : '<span class="text-warning">Нет цены</span>') + '</td></tr>';
-            });
-            html += '</tbody>';
-        } else if (c === 'belts') {
-            html += '<thead><tr><th>Тип ремня</th><th>Ширина (мм)</th><th>Толщина (мм)</th><th>Отверстия</th><th>Диаметр (мм)</th><th>Цена (метр)</th></tr></thead><tbody>';
-            db.belts.forEach(function(i) {
-                var s = (!i.price) ? 'row-incomplete' : '';
-                html += '<tr class="' + s + '"><td>' + i.type + '</td><td>' + i.w + '</td><td>' + i.t + '</td><td>' + i.holes + '</td><td>' + i.dia + '</td><td>' + (i.price ? formatCurr(i.price) : '-') + '</td></tr>';
-            });
-            html += '</tbody>';
-        } else if (c === 'rods') {
-            html += '<thead><tr><th>Наименование прутка/замка</th><th>Рекомендуемый Диаметр (мм)</th><th>Базовая цена (шт/компл)</th></tr></thead><tbody>';
-            db.rods.forEach(function(i, idx) {
-                var s = (!i.price) ? 'row-incomplete' : '';
-                html += '<tr class="' + s + '" style="cursor:pointer;" onclick="window.selectFromCatalog(&quot;rods&quot;, ' + idx + ')" title="Кликните для переноса в Калькулятор"><td><strong>' + i.name + '</strong></td><td>' + (i.dia || '-') + '</td><td>' + (i.price ? formatCurr(i.price) : '-') + '</td></tr>';
-            });
-            html += '</tbody>';
-        }
-        if (catTable) catTable.innerHTML = html;
-    }
-
-    for (var m = 0; m < catTabs.length; m++) {
-        catTabs[m].addEventListener('click', function(e) {
-            for (var bn = 0; bn < catTabs.length; bn++) { catTabs[bn].classList.remove('active'); }
-            var btn = e.currentTarget;
-            btn.classList.add('active');
-            renderCatTab(btn.getAttribute('data-cat'));
         });
+    };
+
+    window.archiveOrder = function(id) {
+        var idx = orders.findIndex(o => o.id === id);
+        if (idx !== -1) {
+            if (!window.ordersArchive) window.ordersArchive = [];
+            var arc = orders.splice(idx, 1)[0];
+            window.ordersArchive.unshift(arc);
+            renderOrders();
+            renderArchive();
+            renderProd();
+            window.fbPush();
+            window.showToast('Заказ ' + id + ' перемещен в архив', 'success');
+        }
+    };
+
+        window.restoreFromArchive = function(id) {
+        var idx = window.ordersArchive.findIndex(o => o.id === id);
+        if (idx !== -1) {
+            var order = window.ordersArchive.splice(idx, 1)[0];
+            orders.unshift(order);
+            renderOrders();
+            renderArchive();
+            window.fbPush();
+        }
+    };
+
+    window.cloneOrder = function(id) {
+        var o = orders.find(x => x.id === id) || window.ordersArchive.find(x => x.id === id);
+        if (o) {
+            var newO = JSON.parse(JSON.stringify(o));
+            newO.id = 'ЗН-' + Math.floor(26000 + Math.random() * 1000);
+            newO.date = tdStr;
+            newO.status = 'Новый';
+            newO.progress = 0;
+            orders.unshift(newO);
+            renderOrders();
+            renderProd();
+            window.showToast('Копия заказа ' + id + ' создана', 'success');
+        }
+    };
+
+    window.printReport = function() {
+        var complSum = 0, cCount = 0;
+        var tbody = document.getElementById('print-report-tbody');
+        if(!tbody) return;
+        tbody.innerHTML = '';
+        orders.forEach(o => {
+            if(o.status === 'Завершен' || o.status === 'Оплачен ФОТ') {
+                complSum += o.sum;
+                cCount++;
+            }
+            tbody.innerHTML += '<tr><td>'+o.id+'</td><td>'+o.date+'</td><td>'+(o.art || '-')+'</td><td>'+formatCurr(o.sum)+'</td><td>'+o.status+'</td></tr>';
+        });
+        document.getElementById('print-rep-revenue').innerText = formatCurr(complSum);
+        document.getElementById('print-rep-count').innerText = cCount + ' шт';
+        document.getElementById('print-rep-fot').innerText = formatCurr(complSum * 0.25);
+        
+        document.body.classList.add('print-report');
+        document.getElementById('print-report-area').classList.remove('hidden');
+        window.print();
+    };
+
+    function renderArchive() {
+        var el = document.getElementById('archive-tbody');
+        if (!el) return;
+        
+        // Авто-архивация: проверяем завершенные заказы старше 3-х дней
+        var now = new Date();
+        for (var i = orders.length - 1; i >= 0; i--) {
+            var o = orders[i];
+            if (o.status === 'Завершен' || o.status === 'Отменен') {
+                var parts = o.date.split('.');
+                if (parts.length === 3) {
+                    var oDate = new Date(parts[2], parts[1]-1, parts[0]);
+                    var diffDays = (now - oDate) / (1000 * 60 * 60 * 24);
+                    if (diffDays > 3) {
+                        var arc = orders.splice(i, 1)[0];
+                        window.ordersArchive.unshift(arc);
+                    }
+                }
+            }
+        }
+
+        var h = '';
+        window.ordersArchive.forEach(o => {
+            h += '<tr><td>' + o.id + '</td><td>' + o.date + '</td><td>' + o.art + '</td><td>' + formatCurr(o.sum) + '</td>' +
+                 '<td><span class="badge status-success">' + o.status + '</span></td>' +
+                 '<td><button class="btn btn-secondary btn-sm" onclick="window.restoreFromArchive(\'' + o.id + '\')">Вернуть</button></td></tr>';
+        });
+        el.innerHTML = h || '<tr><td colspan="6" class="text-center neutral">Архив пуст</td></tr>';
     }
-    renderCatTab('trans');
 
     // Отрисовка заказов
     var ordTable = document.querySelector('#orders-table tbody');
@@ -599,12 +637,26 @@ function initApp() {
             if (o.status === 'Завершен') badgeColor = 'status-success';
             if (o.status === 'Отменен') badgeColor = 'status-danger';
 
-            var tdStrHTML = '<td><strong>' + o.id + '</strong></td>';
-            tdStrHTML += '<td>' + o.date + '</td>';
-            tdStrHTML += '<td>' + o.art + '<br><small class="neutral">' + o.brand + '</small></td>';
+            var itemsSpec = '';
+            if (o.items && o.items.length > 0) {
+                itemsSpec = '<div class="order-spec-mini mt-1" style="font-size:0.75rem; color:var(--text-muted); line-height:1.2;">';
+                o.items.forEach(function(it) {
+                    itemsSpec += '• ' + it.art + ' (' + (it.details ? it.details.L+'x'+it.details.W : it.desc) + ')<br>';
+                });
+                itemsSpec += '</div>';
+            }
+
+            var tdStrHTML = '<td><strong>' + (o.id || '-') + '</strong></td>';
+            tdStrHTML += '<td>' + (o.date || '-') + '</td>';
+            tdStrHTML += '<td>' + (o.art || 'Без артикула') + '<br><small class="neutral">' + (o.brand || '-') + '</small>' + itemsSpec + '</td>';
             tdStrHTML += '<td>' + formatCurr(o.sum) + '</td>';
             tdStrHTML += '<td><select class="select-status ' + badgeColor + '" data-id="' + o.id + '">' + statOpts + '</select></td>';
-            tdStrHTML += '<td><button class="td-btn print-bill-btn" data-id="' + o.id + '" title="Печать Счета"><i class="fa-solid fa-print"></i></button></td>';
+            var arcBtn = o.status === 'Завершен' ? '<button class="action-btn" style="margin-left:5px" title="Архивировать" onclick="window.archiveOrder(\'' + o.id + '\')"><i class="fa-solid fa-box-archive"></i></button>' : '';
+            tdStrHTML += '<td><div class="action-wrap" style="display:flex; gap:5px">' +
+                                '<button class="action-btn print-bill-btn" data-id="' + o.id + '" title="Печать Счета"><i class="fa-solid fa-print"></i></button>' +
+                                '<button class="action-btn" title="Копировать" onclick="window.cloneOrder(\'' + o.id + '\')"><i class="fa-solid fa-copy"></i></button>' +
+                                arcBtn +
+                           '</div></td>';
             
             tr.innerHTML = tdStrHTML;
             ordTable.appendChild(tr);
@@ -623,6 +675,7 @@ function initApp() {
                 }
                 renderOrders();
                 renderProd();
+                window.fbPush();
             });
         }
 
@@ -642,9 +695,9 @@ function initApp() {
                     document.getElementById('bill-sum').innerText = formatCurr(ord.sum);
                     document.getElementById('bill-total').innerText = formatCurr(ord.sum);
                     
+                    document.getElementById('print-bill-area').classList.remove('hidden');
                     document.body.classList.add('print-bill');
                     window.print();
-                    document.body.classList.remove('print-bill');
                 }
             });
         }
@@ -655,13 +708,20 @@ function initApp() {
         var ordBadge = document.getElementById('orders-badge');
         if (ordBadge) ordBadge.innerText = orders.length;
         
-        var complSum = 0, cCount = 0, actCount = 0;
+        var complSum = 0, cCount = 0, actCount = 0, prodCount = 0;
         for (var i = 0; i < orders.length; i++) {
             if (orders[i].status === 'Завершен' || orders[i].status === 'Оплачен ФОТ') {
                 complSum += orders[i].sum;
                 cCount++;
             }
             if (orders[i].status !== 'Отменен') actCount++;
+            if (orders[i].status === 'Новый' || orders[i].status === 'В работе') prodCount++;
+        }
+        
+        var bProd = document.getElementById('badge-prod');
+        if (bProd) {
+            bProd.innerText = prodCount;
+            bProd.style.display = prodCount > 0 ? 'inline-block' : 'none';
         }
         
         var avg = cCount > 0 ? complSum / cCount : 0;
@@ -679,8 +739,31 @@ function initApp() {
         var dsCount = document.querySelectorAll('.dash-orders-count');
         for (var ic = 0; ic < dsCount.length; ic++) dsCount[ic].innerText = actCount + ' шт';
         
-        var dsAvg = document.querySelectorAll('.dash-avg-check');
+        var dashAvg = document.querySelectorAll('.dash-avg-check');
         for (var ia = 0; ia < dsAvg.length; ia++) dsAvg[ia].innerText = formatCurr(avg);
+
+        // Расчет сводки материалов
+        var totalRods = 0, totalWeight = 0, totalBelts = 0;
+        orders.forEach(o => {
+            if(o.status === 'Новый' || o.status === 'В работе') {
+                if(o.items) {
+                    o.items.forEach(it => {
+                        var d = it.details;
+                        if(d) {
+                            totalRods += parseFloat(d.rods) || 0;
+                            totalWeight += parseFloat(d.weight) || 0;
+                            totalBelts += ((parseFloat(d.L) || 0) / 1000) * 2;
+                        }
+                    });
+                }
+            }
+        });
+        var elSR = document.getElementById('summary-rods');
+        if(elSR) elSR.innerText = totalRods + ' шт';
+        var elSW = document.getElementById('summary-weight');
+        if(elSW) elSW.innerText = totalWeight.toFixed(1) + ' кг';
+        var elSB = document.getElementById('summary-belts');
+        if(elSB) elSB.innerText = totalBelts.toFixed(1) + ' м';
 
         // ФОТ и Зарплата (Оклад + Премия + Gross/Net/NDFL)
         var fot = complSum * 0.25; // 25% margin mapped to salaries
@@ -732,7 +815,8 @@ function initApp() {
                 // Очистка или сброс сумм заказов (Мок закрытия периода)
                 orders.forEach(function(o) { if(o.status === 'Завершен') o.status = 'Оплачен ФОТ'; });
                 renderProd();
-                alert('Выплата успешно проведена. Период ' + p + ' закрыт.');
+                if(window.fbPush) window.fbPush();
+                window.showToast('Выплата за ' + p + ' проведена!', 'success');
             }
         };
 
@@ -743,14 +827,9 @@ function initApp() {
             document.getElementById('print-salary-date').innerText = getTodayStr();
             document.getElementById('print-salary-total').innerText = tn;
             
-            document.body.classList.add('print-bill');
+            document.body.classList.add('print-salary');
             document.getElementById('print-salary-area').classList.remove('hidden');
             window.print();
-            
-            setTimeout(function() {
-                document.getElementById('print-salary-area').classList.add('hidden');
-                document.body.classList.remove('print-bill');
-            }, 500);
         };
 
         // Render Archive
@@ -774,10 +853,11 @@ function initApp() {
                 hasActive = true;
                 var p1 = o.progress || 0;
                 
+                var artLower = (o.art || "").toString().toLowerCase();
                 var machine = 'Сборочный цех (Ручная сборка)';
-                if (o.art.toString().toLowerCase().indexOf('транспортер') !== -1) {
+                if (artLower.indexOf('транспортер') !== -1) {
                     machine = 'Агрегатная сборка / Вулканизация';
-                } else if (o.art.indexOf('Пруток') !== -1 || o.art.indexOf('Замок') !== -1) {
+                } else if (artLower.indexOf('пруток') !== -1 || artLower.indexOf('замок') !== -1) {
                     machine = 'Станок ЧПУ (Гибка/Штамповка)';
                 }
                 
@@ -789,12 +869,28 @@ function initApp() {
                                     '<button class="btn btn-success" style="font-size:0.8rem; padding: 6px 12px; background:var(--status-success); color:white; border-radius:4px" onclick="window.workAction(&quot;' + o.id + '&quot;, &quot;finish&quot;)"><i class="fa-solid fa-check-double"></i> Сдать на склад (Завершить)</button></div>';
                 }
                 
+                var itemsSpecProd = '';
+                if (o.items && o.items.length > 0) {
+                    itemsSpecProd = '<div class="prod-spec glass-panel p-2 mt-2" style="font-size:0.85rem; border:1px solid rgba(255,255,255,0.05);">';
+                    o.items.forEach(function(it) {
+                        var d = it.details;
+                        itemsSpecProd += '<div class="mb-1"><strong>' + it.art + '</strong>: ' + (d ? d.L+'x'+d.W + ' (Шаг '+d.P+') | ' + d.rods : (it.desc || 'Без описания')) + '</div>';
+                        if(d && d.features && d.features.length) itemsSpecProd += '<div class="neutral mb-2" style="font-size:0.75rem; padding-left:10px;">' + d.features.join(' | ') + '</div>';
+                    });
+                    itemsSpecProd += '</div>';
+                }
+                
                 htmlQueue += '<div class="prod-item">' +
                         '<div class="prod-header">' +
                             '<span class="prod-id"><i class="fa-solid fa-file-signature"></i> ' + o.id + '</span>' +
-                            '<span class="prod-status ' + (o.status === 'В работе' ? 'status-info' : 'status-warning') + '">' + o.status + '</span>' +
+                            '<div style="display:flex; gap:5px;">' +
+                                '<button class="action-btn" title="Изменить" onclick="window.openOrderEdit(\'' + o.id + '\')"><i class="fa-solid fa-edit"></i></button>' +
+                                '<button class="action-btn" title="Печать Наряда" onclick="window.printProdOrder(\'' + o.id + '\')"><i class="fa-solid fa-print"></i></button>' +
+                                '<span class="prod-status ' + (o.status === 'В работе' ? 'status-info' : 'status-warning') + '">' + o.status + '</span>' +
+                            '</div>' +
                         '</div>' +
-                        '<div style="font-size:0.95rem">' + o.art + ' <br><small class="neutral">' + o.brand + '</small></div>' +
+                        '<div style="font-size:0.95rem">' + (o.art || 'Без артикула') + ' <br><small class="neutral">' + (o.brand || 'Без бренда') + '</small></div>' +
+                        itemsSpecProd +
                         '<div class="prod-progress-bg"><div class="prod-progress-bar" style="width: ' + p1 + '%"></div></div>' +
                         '<div class="prod-machine"><i class="fa-solid fa-industry emerald"></i> <strong>' + machine + '</strong> &nbsp;|&nbsp; Прогресс: ' + p1 + '%</div>' +
                         actionBtnHTML +
@@ -824,13 +920,14 @@ function initApp() {
                 } else if (action === 'finish') {
                     orders[i].progress = 100;
                     orders[i].status = 'Завершен';
-                    // Optional small alert so the user feels the interactivity
-                    alert('Заказ ' + id + ' успешно завершен и перемещен на склад готовой продукции!');
+                    // Показываем toast уведомление
+                    window.showToast('Заказ ' + id + ' завершён!', 'success');
                 }
             }
         }
         renderOrders();
         renderProd();
+        if(window.fbPush) window.fbPush();
     };
 
     renderOrders();
@@ -858,7 +955,50 @@ function initApp() {
         });
     }
 
+    window.printInvoiceFromBasket = function() {
+        if (window.calcBasket.length === 0) return alert('Список пуст!');
+        var firstArt = window.calcBasket[0].art;
+        var totalSum = window.calcBasket.reduce(function(acc, it) { return acc + it.sum; }, 0);
+        
+        document.getElementById('bill-num').innerText = 'Б/Н';
+        document.getElementById('bill-date').innerText = tdStr;
+        document.getElementById('bill-item').innerText = window.calcBasket.length > 1 ? firstArt + ' + ' + (window.calcBasket.length - 1) + ' поз.' : firstArt;
+        document.getElementById('bill-price').innerText = formatCurr(totalSum);
+        document.getElementById('bill-sum').innerText = formatCurr(totalSum);
+        document.getElementById('bill-total').innerText = formatCurr(totalSum);
+        
+        document.getElementById('print-bill-area').classList.remove('hidden');
+        document.body.classList.add('print-bill');
+        window.print();
+    };
+
     window.printCalc = function() {
+        var printWrap = document.getElementById('calc-basket-tbody').cloneNode(true);
+        // Добавляем таблицу спецификации в область печати
+        var printHeader = document.getElementById('print-header-calc');
+        var existingTable = printHeader.parentElement.querySelector('.print-spec-table');
+        if (existingTable) existingTable.remove();
+
+        if (window.calcBasket.length > 0) {
+            var table = document.createElement('table');
+            table.className = 'data-table print-spec-table mt-4';
+            table.style.width = '100%';
+            table.style.borderCollapse = 'collapse';
+            table.innerHTML = '<thead><tr><th>Позиция</th><th>Спецификация и параметры</th><th>Сумма</th></tr></thead>';
+            var tbody = document.createElement('tbody');
+            window.calcBasket.forEach(function(it) {
+                var d = it.details;
+                var specTxt = '<strong>Размеры:</strong> ' + d.L + 'x' + d.W + ' (Шаг ' + d.P + ')<br>' +
+                              '<strong>Тип:</strong> ' + d.type + ', <strong>Ремни:</strong> ' + d.belts + ', <strong>Замок:</strong> ' + d.lock + '<br>' +
+                              '<strong>Прутки:</strong> ' + d.rods + ', <strong>Вес:</strong> ' + d.weight + '<br>' +
+                              '<small>' + d.features.join(' | ') + '</small>';
+                tbody.innerHTML += '<tr><td>' + it.art + '</td><td>' + specTxt + '</td><td>' + formatCurr(it.sum) + '</td></tr>';
+            });
+            table.appendChild(tbody);
+            printHeader.after(table);
+        }
+
+        document.getElementById('print-header-calc').classList.remove('hidden');
         document.body.classList.add('print-calc');
         window.print();
     };
@@ -867,11 +1007,67 @@ function initApp() {
         // Class is added inside specific print functions to avoid collisions
     });
 
+    window.openOrderEdit = function(id) {
+        var o = orders.find(x => x.id === id);
+        if(!o) return;
+        document.getElementById('edit-order-id').value = o.id;
+        document.getElementById('edit-order-art').value = o.art;
+        document.getElementById('edit-order-brand').value = o.brand;
+        document.getElementById('edit-order-sum').value = o.sum;
+        document.getElementById('edit-order-status').value = o.status;
+        document.getElementById('order-edit-modal').classList.add('active');
+    };
+
+    window.saveOrderEdit = function() {
+        var id = document.getElementById('edit-order-id').value;
+        var o = orders.find(x => x.id === id);
+        if(o) {
+            o.art = document.getElementById('edit-order-art').value;
+            o.brand = document.getElementById('edit-order-brand').value;
+            o.sum = parseFloat(document.getElementById('edit-order-sum').value) || 0;
+            o.status = document.getElementById('edit-order-status').value;
+            document.getElementById('order-edit-modal').classList.remove('active');
+            renderOrders();
+            renderProd();
+            window.fbPush();
+        }
+    };
+
+    window.printProdOrder = function(id) {
+        var o = orders.find(x => x.id === id);
+        if(!o) return;
+        
+        document.getElementById('print-prod-id').innerText = o.id;
+        document.getElementById('print-prod-date').innerText = o.date;
+        document.getElementById('print-prod-art').innerText = o.art || "-";
+        document.getElementById('print-prod-brand').innerText = o.brand || "-";
+        
+        var artLower = (o.art || "").toString().toLowerCase();
+        var machine = 'Сборочный цех';
+        if (artLower.indexOf('транспортер') !== -1) machine = 'Агрегатная сборка / Вулканизация';
+        document.getElementById('print-prod-machine').innerText = machine;
+        
+        var specsHTML = '';
+        if(o.items) {
+            o.items.forEach(it => {
+                specsHTML += '<p><strong>'+(it.art || '-')+'</strong>: ' + (it.details ? it.details.L+'x'+it.details.W+' | '+it.details.rods : (it.desc || "")) + '</p>';
+                if(it.details && it.details.features && it.details.features.length) specsHTML += '<p style="margin-left:20px; font-size:0.9rem;">- ' + it.details.features.join('<br>- ') + '</p>';
+            });
+        }
+        document.getElementById('print-prod-specs').innerHTML = specsHTML || 'Детализация отсутствует.';
+        
+        document.body.classList.add('print-prod-order');
+        document.getElementById('print-prod-order-area').classList.remove('hidden');
+        window.print();
+    };
+
     window.addEventListener('afterprint', function() {
-        document.body.classList.remove('print-calc');
-        document.body.classList.remove('print-bill');
-        document.body.classList.remove('print-salary');
-        document.getElementById('print-salary-area').classList.add('hidden');
+        document.body.classList.remove('print-calc', 'print-bill', 'print-salary', 'print-report', 'print-prod-order');
+        var areas = ['print-salary-area', 'print-report-area', 'print-prod-order-area', 'print-bill-area', 'print-header-calc'];
+        areas.forEach(id => {
+            var el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        });
     });
 
 }
