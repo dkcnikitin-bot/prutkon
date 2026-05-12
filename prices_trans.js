@@ -533,8 +533,16 @@ window.renderExcelPreview = function() {
 
 window.openAddMaster = function() { 
     window.addStep = 1; 
+    
+    // Сначала гарантированно заполняем селект категорий
+    if (window.updateExcelCatSelect) window.updateExcelCatSelect();
+    
     const m = document.getElementById('add-master-modal'); 
     if (m) { 
+        const catSelect = document.getElementById('add-category');
+        if (catSelect && window.activeCategory && window.activeCategory !== 'all') {
+            catSelect.value = window.activeCategory;
+        }
         m.classList.add('active'); 
         window.updateAddWizardUI(); 
     }
