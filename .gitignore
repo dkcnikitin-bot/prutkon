@@ -1,12 +1,1 @@
-# Среда Python и зависимости
-__pycache__/
-*.pyc
-
-# Временные файлы и сборка
-.DS_Store
-Thumbs.db
-
-# Настройки IDE
-.vscode/
-.idea/
-.gemini/
+Nothing should be ignored based on the provided file changes, as they are all source files (.js and .html).

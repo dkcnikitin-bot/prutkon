@@ -401,17 +401,142 @@ window.runUniversalImport = async ({ data, mappings, artSources, targetCategory,
 window.renderConstructor = () => {
     const p = document.getElementById('constructor-main'); if (!p) return;
     p.innerHTML = `
-        <div class="welcome-panel"><h1>PRUTKON ERP</h1><p id="dash-date">...</p></div>
-        <div class="stats-grid mb-5" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;">
-            <div class="stat-card"><h4>Выручка</h4><div id="dash-revenue" class="stat-value">0</div></div>
-            <div class="stat-card"><h4>Заказы</h4><div id="dash-orders-count" class="stat-value">0</div></div>
-            <div class="stat-card"><h4>Нагрузка</h4><div id="dash-load-value" class="stat-value">0%</div></div>
+        <div class="welcome-panel">
+            <div>
+                <h1 style="font-size:2.5rem; margin-bottom:10px;"><i class="fa-solid fa-industry" style="color:var(--brand-red); margin-right:15px;"></i>ПРУТКОН ОС</h1>
+                <p id="dash-date" style="font-size:1.1rem; color:var(--text-secondary);">...</p>
+            </div>
+            <div class="quick-actions">
+                <div class="quick-btn" onclick="window.navigateTo('orders')">
+                    <i class="fa-solid fa-cart-plus" style="color:var(--accent-blue);"></i>
+                    <span>Новый заказ</span>
+                </div>
+                <div class="quick-btn" onclick="window.navigateTo('catalog')">
+                    <i class="fa-solid fa-boxes-stacked" style="color:var(--emerald-neon);"></i>
+                    <span>Каталог</span>
+                </div>
+            </div>
+        </div>
+        <div class="stats-grid mb-5" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;">
+            <div class="stat-card glass-panel" style="padding:25px; border-radius:16px; background:rgba(255,255,255,0.03);">
+                <div class="stat-label"><i class="fa-solid fa-ruble-sign" style="margin-right:8px;"></i>Выручка</div>
+                <div id="dash-revenue" class="stat-value" style="color:var(--emerald-neon);">0 ₽</div>
+            </div>
+            <div class="stat-card glass-panel" style="padding:25px; border-radius:16px; background:rgba(255,255,255,0.03);">
+                <div class="stat-label"><i class="fa-solid fa-clipboard-list" style="margin-right:8px;"></i>Заказы</div>
+                <div id="dash-orders-count" class="stat-value" style="color:var(--accent-blue);">0</div>
+            </div>
+            <div class="stat-card glass-panel" style="padding:25px; border-radius:16px; background:rgba(255,255,255,0.03);">
+                <div class="stat-label"><i class="fa-solid fa-gauge-high" style="margin-right:8px;"></i>Нагрузка</div>
+                <div id="dash-load-value" class="stat-value" style="color:var(--gold-industrial);">0%</div>
+            </div>
+            <div class="stat-card glass-panel" style="padding:25px; border-radius:16px; background:rgba(255,255,255,0.03);">
+                <div class="stat-label"><i class="fa-brands fa-bitrix24" style="margin-right:8px;"></i>CRM Статус</div>
+                <div id="dash-crm-status" class="stat-value" style="color:var(--text-muted); font-size:1.2rem;">Откл</div>
+            </div>
         </div>
         <div class="dash-row" style="display:grid; grid-template-columns: 2fr 1fr; gap:25px;">
-            <div class="panel"><h3>Последние сделки</h3><table class="w-full"><tbody id="dash-orders-list"></tbody></table></div>
-            <div class="panel"><h3>Активность</h3><div id="dash-audit-feed" class="audit-feed"></div></div>
+            <div class="glass-panel" style="padding:25px; border-radius:16px; background:rgba(255,255,255,0.02);">
+                <h3 style="margin-bottom:20px; display:flex; align-items:center; gap:10px;">
+                    <i class="fa-solid fa-clock-rotate-left" style="color:var(--brand-red);"></i>
+                    Последние сделки
+                </h3>
+                <div style="overflow-x:auto;">
+                    <table class="w-full" style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr style="border-bottom:2px solid var(--border-glass);">
+                                <th style="padding:12px; text-align:left; color:var(--text-muted); font-weight:600;">Заказ</th>
+                                <th style="padding:12px; text-align:left; color:var(--text-muted); font-weight:600;">Статус</th>
+                                <th style="padding:12px; text-align:right; color:var(--text-muted); font-weight:600;">Сумма</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dash-orders-list"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="glass-panel" style="padding:25px; border-radius:16px; background:rgba(255,255,255,0.02);">
+                <h3 style="margin-bottom:20px; display:flex; align-items:center; gap:10px;">
+                    <i class="fa-solid fa-bell" style="color:var(--accent-blue);"></i>
+                    Активность
+                </h3>
+                <div id="dash-audit-feed" class="audit-feed" style="max-height:400px; overflow-y:auto;"></div>
+            </div>
+        </div>
+        <div class="dash-row" style="margin-top:25px; display:grid; grid-template-columns: 1fr 1fr; gap:25px;">
+            <div class="glass-panel" style="padding:25px; border-radius:16px; background:rgba(255,255,255,0.02);">
+                <h3 style="margin-bottom:20px; display:flex; align-items:center; gap:10px;">
+                    <i class="fa-solid fa-chart-line" style="color:var(--emerald-neon);"></i>
+                    Интеграция с Bitrix24
+                </h3>
+                <div id="bitrix-integration-block" style="padding:20px; background:rgba(0,0,0,0.3); border-radius:12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                        <span style="color:var(--text-secondary);">Вебхук:</span>
+                        <span id="bitrix-webhook-status" style="color:var(--text-muted); font-family:monospace;">Не настроен</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                        <span style="color:var(--text-secondary);">Статус:</span>
+                        <span id="bitrix-enabled-status" style="padding:4px 12px; border-radius:20px; font-size:0.8rem; background:rgba(255,30,39,0.2); color:var(--brand-red);">Отключено</span>
+                    </div>
+                    <button class="btn btn-primary" onclick="window.openBitrixSettings()" style="width:100%; margin-top:10px;">
+                        <i class="fa-solid fa-sliders"></i> Настроить интеграцию
+                    </button>
+                </div>
+            </div>
+            <div class="glass-panel" style="padding:25px; border-radius:16px; background:rgba(255,255,255,0.02);">
+                <h3 style="margin-bottom:20px; display:flex; align-items:center; gap:10px;">
+                    <i class="fa-solid fa-database" style="color:var(--gold-industrial);"></i>
+                    Состояние базы данных
+                </h3>
+                <div style="padding:20px; background:rgba(0,0,0,0.3); border-radius:12px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span style="color:var(--text-secondary);">Продуктов:</span>
+                        <span id="db-products-count" style="color:#fff; font-weight:700;">0</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span style="color:var(--text-secondary);">Категорий:</span>
+                        <span id="db-categories-count" style="color:#fff; font-weight:700;">0</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span style="color:var(--text-secondary);">Заказов:</span>
+                        <span id="db-orders-count" style="color:#fff; font-weight:700;">0</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:var(--text-secondary);">Версия БД:</span>
+                        <span id="db-version-display" style="color:var(--accent-blue); font-family:monospace;">${window.DB_VERSION || '---'}</span>
+                    </div>
+                </div>
+            </div>
         </div>
     `;
+    
+    // Обновление статуса Bitrix
+    setTimeout(() => {
+        const webhookStatus = document.getElementById('bitrix-webhook-status');
+        const enabledStatus = document.getElementById('bitrix-enabled-status');
+        const crmStatus = document.getElementById('dash-crm-status');
+        
+        if (window.bitrixConfig && window.bitrixConfig.webhookUrl) {
+            if (webhookStatus) webhookStatus.innerText = window.bitrixConfig.webhookUrl.substring(0, 40) + '...';
+            if (enabledStatus) {
+                enabledStatus.style.background = window.bitrixConfig.enabled ? 'rgba(0,255,157,0.2)' : 'rgba(255,30,39,0.2)';
+                enabledStatus.style.color = window.bitrixConfig.enabled ? 'var(--emerald-neon)' : 'var(--brand-red)';
+                enabledStatus.innerText = window.bitrixConfig.enabled ? 'Активно' : 'Отключено';
+            }
+            if (crmStatus) {
+                crmStatus.innerText = window.bitrixConfig.enabled ? 'Подключено' : 'Ожидание';
+                crmStatus.style.color = window.bitrixConfig.enabled ? 'var(--emerald-neon)' : 'var(--gold-industrial)';
+            }
+        }
+        
+        // Обновление счетчиков БД
+        const productsCount = document.getElementById('db-products-count');
+        const categoriesCount = document.getElementById('db-categories-count');
+        const ordersCount = document.getElementById('db-orders-count');
+        
+        if (productsCount) productsCount.innerText = (window.dbProducts || []).length;
+        if (categoriesCount) categoriesCount.innerText = (window.dbCategories || []).length;
+        if (ordersCount) ordersCount.innerText = (window.orders || []).length;
+    }, 100);
 };
 
 // --- 7. UI RENDERING (делегируем модулям header.js, menu.js, footer.js) ---
@@ -517,6 +642,24 @@ window.connectFirebase = window.connectFirebase || (() => console.warn('Firebase
 window.saveOrders = window.saveAllToLocal;
 window.saveCatalog = window.saveAllToLocal;
 window.addAudit = (id, action, user) => window.logAudit('INFO', `${action} (ID: ${id})`);
+
+// Навигация между разделами
+window.navigateTo = function(section) {
+    const targetPage = section + '.html';
+    window.location.href = targetPage;
+};
+
+// Открытие настроек Bitrix24
+window.openBitrixSettings = function() {
+    window.location.href = 'settings.html#bitrix';
+    // Или можно открыть модальное окно с настройками
+    if (typeof window.renderBitrixSettings === 'function') {
+        window.renderBitrixSettings();
+    } else {
+        window.showToast('Переход к настройкам интеграции...', 'info');
+        setTimeout(() => { window.location.href = 'settings.html'; }, 500);
+    }
+};
 
 // --- 11. INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {

@@ -1282,6 +1282,10 @@ window.renderExcelPreview = function() {
 
 window.startAddWizard = function() {
     window.addStep = 1; 
+    
+    // Сначала гарантированно заполняем селект категорий
+    window.updateExcelCatSelect();
+    
     const m = document.getElementById('add-master-modal');
     if (m) { 
         const catSelect = document.getElementById('add-category');
