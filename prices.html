@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пруткон | Прайсы заготовки</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=18.1.1">
+    <link rel="stylesheet" href="css/styles.css?v=19.0.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -34,7 +34,10 @@
 
                 <div class="panel glass-panel">
                     <div class="flex justify-between items-center mb-4">
-                        <h4 id="price-title" class="mb-0">Заготовки и комплектующие</h4>
+                        <div class="flex gap-2 items-center">
+                            <h4 id="price-title" class="mb-0">Заготовки и комплектующие</h4>
+                            <button id="price-help-btn" class="btn btn-secondary btn-xs" style="padding: 2px 6px; font-size: 12px; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;" onclick="window.showPriceHelp()" title="Справка по разделу"><i class="fa-regular fa-circle-question"></i></button>
+                        </div>
                         <div class="flex gap-2 items-center">
                             <input type="text" id="price-search-input" class="form-control" placeholder="Поиск в прайсе..." style="width:280px;" oninput="window.renderPriceTable()">
                         </div>
@@ -57,6 +60,18 @@
                                 <option value="in_stock">В наличии</option>
                                 <option value="low_stock">Мало (< 10)</option>
                                 <option value="out_of_stock">Нет в наличии</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="text-xs neutral uppercase mb-1">Диаметр</label>
+                            <select id="filter-diameter" class="form-control form-control-sm" onchange="window.renderPriceTable()" style="width:130px;">
+                                <option value="">Все диаметры</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="text-xs neutral uppercase mb-1">Марка стали</label>
+                            <select id="filter-steel-type" class="form-control form-control-sm" onchange="window.renderPriceTable()" style="width:140px;">
+                                <option value="">Все марки</option>
                             </select>
                         </div>
                         <div class="filter-group">
@@ -278,22 +293,19 @@
                     <label>Остаток (шт)</label>
                     <input type="number" id="pc-stock" class="form-control" placeholder="0" min="0">
                 </div>
+                <div class="form-group">
+                    <label>Поставщик</label>
+                    <input type="text" id="pc-supplier" class="form-control" placeholder="ООО Поставщик">
+                </div>
+                <div class="form-group">
+                    <label>Место хранения</label>
+                    <input type="text" id="pc-storage" class="form-control" placeholder="Стеллаж 1, Полка А">
+                </div>
                 <div class="form-group" style="grid-column:1/-1;">
                     <label>Категория</label>
                     <select id="pc-category" class="form-control" onchange="window.loadProductCategoryFields()"></select>
                 </div>
-                <div class="form-group" style="grid-column:1/-1;">
-                    <label>Фото</label>
-                    <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
-                        <input type="text" id="pc-photo" class="form-control" style="flex:1; min-width:200px;" placeholder="Путь к изображению">
-                        <input type="file" id="pc-photo-upload" class="hidden" accept="image/*" onchange="window.handlePhotoUpload(this)">
-                        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('pc-photo-upload').click()" title="Загрузить фото">
-                            <i class="fa-solid fa-upload"></i> Фото
-                        </button>
-                        <img id="product-card-img" style="width:80px; height:80px; object-fit:cover; border-radius:8px; border:2px solid var(--border-glass);" src="placeholder.jpg" onerror="this.src='placeholder.jpg'">
-                    </div>
-                    <div id="pc-photo-path-hint" class="text-xs text-muted mt-2" style="opacity:0.6;"></div>
-                </div>
+                <div class="form-group" style="grid-column:1/-1;" id="pc-photo-container"></div>
             </div>
             
             <!-- Динамические поля категории -->
@@ -391,15 +403,32 @@
         </div>
     </div>
 
+    <!-- MODAL: PRICE HELP -->
+    <div id="price-help-modal" class="modal">
+        <div class="glass-panel" style="width:650px; padding:35px; border: 1px solid var(--border-glass);">
+            <h3 class="mb-4 brand-red flex items-center gap-2">
+                <i class="fa-regular fa-circle-question text-xl"></i>
+                <span id="price-help-title">Справка по разделу</span>
+            </h3>
+            <div id="price-help-content" class="mb-5" style="max-height:400px; overflow-y:auto; line-height:1.6; font-size:14px; color:var(--text-main);">
+                <!-- Справка будет добавлена через JS -->
+            </div>
+            <div class="flex justify-end">
+                <button class="btn btn-primary" onclick="document.getElementById('price-help-modal').classList.remove('active')">Понятно</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script>window.DB_VERSION = "18.25.4";</script>
-    <script src="header.js?v=18.25.4"></script>
-    <script src="menu.js?v=18.25.4"></script>
-    <script src="footer.js?v=18.25.4"></script>
-    <script src="i18n.js?v=18.25.4"></script>
-    <script src="version_history.js?v=18.25.4"></script>
-    <script src="core.js?v=18.25.4"></script>
-    <script src="prices.js?v=18.25.4"></script>
+    <script>window.DB_VERSION = "19.0.0";</script>
+    <script src="js/layout/header.js?v=19.0.0"></script>
+    <script src="js/layout/menu.js?v=19.0.0"></script>
+    <script src="js/layout/footer.js?v=19.0.0"></script>
+    <script src="js/core/i18n.js?v=19.0.0"></script>
+    <script src="js/core/version_history.js?v=19.0.0"></script>
+    <script src="js/core/firebase_config.js"></script>
+    <script src="js/core/core.js?v=19.0.0"></script>
+    <script src="js/handlers/prices.js?v=19.0.0"></script>
 </body>
 </html>

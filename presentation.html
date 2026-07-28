@@ -41,6 +41,7 @@
         .bg-orb.blue { background: var(--accent-blue); width: 600px; height: 600px; bottom: -200px; left: 10%; animation-delay: -7s; }
         .bg-orb.purple { background: var(--accent-purple); width: 500px; height: 500px; top: 40%; right: 20%; animation-delay: -3s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-120px, 120px) scale(1.1); } }
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
         /* Sidebar - Enterprise Glassmorphism */
         .sidebar {
@@ -211,13 +212,478 @@
         .step-box-title { color: var(--brand-red); font-weight: 900; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 15px; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
         .step-num { background: rgba(244,44,51,0.1); color: var(--brand-red); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 900; }
 
-        /* Fake UI components for Salary Module */
-        .fake-ui-panel { background: #0c0c10; border: 1px solid #222; border-radius: 12px; padding: 20px; margin-top: 20px; }
-        .fake-ui-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #1a1a24; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+        /* Fake UI components for Salary Module & Advanced Previews */
+        .fake-ui-panel { 
+            background: rgba(12, 12, 18, 0.95); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 16px; 
+            padding: 24px; 
+            margin-top: 25px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+        }
+        .fake-ui-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 12px 0; 
+            border-bottom: 1px solid rgba(255,255,255,0.04); 
+            font-family: 'Inter', sans-serif; 
+            font-size: 0.95rem; 
+        }
         .fake-ui-row:last-child { border-bottom: none; }
-        .val-green { color: var(--accent-green); }
-        .val-red { color: #ff4b4b; }
+        .val-green { color: var(--accent-green); font-weight: 700; text-shadow: 0 0 10px rgba(0, 230, 118, 0.3); }
+        .val-red { color: #ff4b4b; font-weight: 700; text-shadow: 0 0 10px rgba(255, 75, 75, 0.3); }
+        .val-blue { color: var(--accent-blue); font-weight: 700; text-shadow: 0 0 10px rgba(0, 180, 255, 0.3); }
+        .val-purple { color: var(--accent-purple); font-weight: 700; text-shadow: 0 0 10px rgba(157, 78, 221, 0.3); }
+        .val-orange { color: var(--accent-orange); font-weight: 700; text-shadow: 0 0 10px rgba(255, 145, 0, 0.3); }
+        
+        .prog-bar-container { background: rgba(255, 255, 255, 0.05); border-radius: 10px; height: 8px; width: 100%; margin-top: 10px; overflow: hidden; position: relative; }
+        .prog-bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease-in-out; }
+        .prog-bar-fill.red { background: var(--brand-red); box-shadow: 0 0 10px var(--brand-red-glow); }
+        .prog-bar-fill.green { background: var(--accent-green); box-shadow: 0 0 10px rgba(0, 230, 118, 0.4); }
+        .prog-bar-fill.blue { background: var(--accent-blue); box-shadow: 0 0 10px rgba(0, 180, 255, 0.4); }
+        .prog-bar-fill.purple { background: var(--accent-purple); box-shadow: 0 0 10px rgba(157, 78, 221, 0.4); }
+        .prog-bar-fill.orange { background: var(--accent-orange); box-shadow: 0 0 10px rgba(255, 145, 0, 0.4); }
+        
+        /* Flow chart blocks */
+        .flow-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 25px; text-align: center; }
+        .flow-step { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px 10px; position: relative; transition: 0.3s; }
+        .flow-step:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+        .flow-step i { font-size: 1.6rem; margin-bottom: 12px; display: block; }
+        .flow-step-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: #fff; margin-bottom: 6px; }
+        .flow-step-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.3; }
 
+        /* JSON display */
+        .code-json { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 0.85rem; color: #a2b0c2; background: #07070a; border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); overflow-x: auto; line-height: 1.6; text-align: left; }
+        .code-json .key { color: #f9758b; }
+        .code-json .string { color: #9ecbff; }
+        .code-json .number { color: #ffab70; }
+        .code-json .boolean { color: #79b8ff; }
+
+        /* Hologram Grid Effects on Cards */
+        .detail-card {
+            --card-glow-color: rgba(255, 255, 255, 0.05);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+        .detail-card:hover {
+            border-color: rgba(255, 255, 255, 0.25) !important;
+            box-shadow: 0 35px 70px rgba(0,0,0,0.6), 0 0 30px var(--card-glow-color) !important;
+            transform: translateY(-8px) scale(1.005) !important;
+        }
+        .detail-card.glow-red { --card-glow-color: rgba(244, 44, 51, 0.22); }
+        .detail-card.glow-blue { --card-glow-color: rgba(0, 180, 255, 0.22); }
+        .detail-card.glow-green { --card-glow-color: rgba(0, 230, 118, 0.22); }
+        .detail-card.glow-purple { --card-glow-color: rgba(157, 78, 221, 0.22); }
+        .detail-card.glow-orange { --card-glow-color: rgba(255, 145, 0, 0.22); }
+
+        /* Wizard Stepper visual */
+        .stepper-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(10, 10, 15, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+        .step-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            flex: 1;
+            min-width: 80px;
+        }
+        .step-node::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: calc(50% + 20px);
+            width: calc(100% - 40px);
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+        .step-node:last-child::after { display: none; }
+        .step-node.active::after {
+            background: linear-gradient(90deg, var(--brand-red), rgba(255, 255, 255, 0.1));
+        }
+        .step-node.completed::after {
+            background: var(--accent-green);
+        }
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--text-muted);
+            z-index: 2;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .step-node.active .step-circle {
+            background: rgba(244, 44, 51, 0.2);
+            border-color: var(--brand-red);
+            color: #fff;
+            box-shadow: 0 0 15px var(--brand-red-glow);
+        }
+        .step-node.completed .step-circle {
+            background: rgba(0, 230, 118, 0.2);
+            border-color: var(--accent-green);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.3);
+        }
+        .step-label {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .step-node.active .step-label { color: #fff; }
+        .step-node.completed .step-label { color: var(--accent-green); }
+
+        /* Cost table styling */
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+        .spec-table th, .spec-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .spec-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .spec-table tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        .markup-seal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 2px dashed var(--brand-red);
+            color: var(--brand-red);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 900;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transform: rotate(5deg);
+            box-shadow: 0 0 15px rgba(244, 44, 51, 0.15);
+            background: rgba(244, 44, 51, 0.05);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Role Matrix & Stamp */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .matrix-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+        .matrix-card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .matrix-role {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .matrix-perm {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .db-stamp {
+            display: inline-block;
+            border: 3px double #ff4b4b;
+            color: #ff4b4b;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 900;
+            padding: 8px 18px;
+            margin-top: 20px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: rgba(255, 75, 75, 0.05);
+            box-shadow: 0 0 25px rgba(255, 75, 75, 0.25);
+            text-align: center;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        /* B24 logs preview */
+        .crm-timeline {
+            margin-top: 20px;
+            border-left: 2px solid rgba(0, 180, 255, 0.15);
+            padding-left: 20px;
+            text-align: left;
+        }
+        .crm-event {
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+        }
+        .crm-event::before {
+            content: '';
+            position: absolute;
+            left: -27px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #050507;
+            border: 3px solid var(--accent-blue);
+            box-shadow: 0 0 8px rgba(0, 180, 255, 0.5);
+        }
+        .crm-event-time {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-bottom: 3px;
+        }
+        .crm-event-title {
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+        .crm-event-desc {
+            color: var(--text-muted);
+        }
+
+        /* Excel Mapper drag and drop area */
+        .excel-dropzone {
+            border: 2px dashed rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.01);
+            margin-top: 25px;
+            transition: all 0.3s ease;
+        }
+        .excel-dropzone:hover {
+            border-color: var(--brand-red);
+            background: rgba(244, 44, 51, 0.02);
+        }
+        .excel-icon-row {
+            font-size: 2.5rem;
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+        .excel-map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        .excel-map-tag {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .excel-map-tag .file-col {
+            color: #ffab70;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+        .excel-map-tag .db-attr {
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        /* Before / After Merge cards */
+        .merge-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+            text-align: left;
+        }
+        .merge-box {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .merge-box.before { border-left: 4px solid var(--brand-red); }
+        .merge-box.after { border-left: 4px solid var(--accent-green); }
+        .merge-header {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .merge-header.red { color: #ff4b4b; }
+        .merge-header.green { color: var(--accent-green); }
+        .merge-item {
+            font-size: 0.8rem;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            justify-content: space-between;
+        }
+        .merge-item:last-child { border-bottom: none; }
+
+        /* Invoice template simulator */
+        .invoice-mock {
+            background: #ffffff;
+            color: #1a1a1a;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 25px;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #e1e4e8;
+            text-align: left;
+        }
+        .inv-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .inv-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #1a1a1a;
+        }
+        .inv-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            font-size: 0.75rem;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .inv-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+            margin-bottom: 20px;
+        }
+        .inv-table th, .inv-table td {
+            padding: 8px;
+            border-bottom: 1px solid #e1e4e8;
+            text-align: left;
+            color: #333;
+        }
+        .inv-table th {
+            background: #f6f8fa;
+            font-weight: 700;
+            color: #333;
+        }
+        .inv-totals {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* AI parser UI split */
+        .ai-parser-split {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+            text-align: left;
+        }
+        .ai-input-pane {
+            background: rgba(10, 10, 15, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .ai-input-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .ai-textarea {
+            width: 100%;
+            height: 120px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            color: #fff;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            resize: none;
+            font-family: inherit;
+        }
+        .ai-extracted-pane {
+            background: rgba(157, 78, 221, 0.05);
+            border: 1px dashed rgba(157, 78, 221, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            position: relative;
+        }
+        .ai-extracted-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -236,7 +702,6 @@
             <li class="nav-item"><a href="#hero" class="nav-link active"><i class="fa-solid fa-house"></i> Заставка</a></li>
             
             <div class="nav-group-title">Введение & Идеология</div>
-            <li class="nav-item"><a href="#s0-author" class="nav-link"><i class="fa-solid fa-user-astronaut"></i> Знакомство с Автором</a></li>
             <li class="nav-item"><a href="#s1-goals" class="nav-link"><i class="fa-solid fa-bullseye"></i> Глобальная Миссия</a></li>
             <li class="nav-item"><a href="#s1b-history" class="nav-link"><i class="fa-solid fa-code-branch"></i> Эволюция Системы</a></li>
             <li class="nav-item"><a href="#s2-stages" class="nav-link"><i class="fa-solid fa-timeline"></i> Этапы Реализации</a></li>
@@ -246,6 +711,8 @@
             <li class="nav-item"><a href="#s4-dashboard" class="nav-link"><i class="fa-solid fa-desktop"></i> Рабочий Стол Менеджера</a></li>
             <li class="nav-item"><a href="#s5-calculator" class="nav-link"><i class="fa-solid fa-calculator"></i> Инженерная Смета</a></li>
             <li class="nav-item"><a href="#s6-wizard" class="nav-link"><i class="fa-solid fa-wand-magic-sparkles"></i> 5 Шагов: Мастер Заказов</a></li>
+            <li class="nav-item"><a href="#s6b-warehouse" class="nav-link"><i class="fa-solid fa-warehouse"></i> Учет ТМЦ и Склад</a></li>
+            <li class="nav-item"><a href="#s6c-production" class="nav-link"><i class="fa-solid fa-industry"></i> Производственный Конвейер</a></li>
             <li class="nav-item"><a href="#s7-approval" class="nav-link"><i class="fa-solid fa-user-shield"></i> Иерархия Утверждений</a></li>
             <li class="nav-item"><a href="#s8-crm" class="nav-link"><i class="fa-solid fa-handshake"></i> Интеграция с Bitrix24</a></li>
             <li class="nav-item"><a href="#s9-import" class="nav-link"><i class="fa-solid fa-file-excel"></i> Умный Импорт (AI Маппинг)</a></li>
@@ -275,44 +742,7 @@
             </p>
         </section>
 
-        <!-- 0.5 АВТОР ПРОЕКТА -->
-        <section id="s0-author" class="slide-section reveal">
-            <div class="section-header">
-                <span class="section-badge"><i class="fa-solid fa-user-tie"></i> Создатель</span>
-                <h1 class="section-title text-gradient">Давайте знакомиться.</h1>
-            </div>
-            
-            <div class="profile-container">
-                <div class="profile-image-col reveal delay-1">
-                    <img src="logo.png" onerror="this.src='https://ui-avatars.com/api/?name=Иван+Никитин&background=f42c33&color=fff&size=200'" alt="Иван Никитин" class="profile-avatar">
-                    <div class="profile-name">Иван Никитин</div>
-                    <div class="profile-tag">Руководитель Проекта / Архитектор</div>
-                    
-                    <div class="profile-stats">
-                        <div><i class="fa-solid fa-briefcase"></i> 5+ лет в управлении процессами</div>
-                        <div><i class="fa-solid fa-network-wired"></i> Экспертиза: AMO CRM, Телефония</div>
-                        <div><i class="fa-solid fa-users-gear"></i> Построение отделов и систем KPI</div>
-                        <div><i class="fa-solid fa-chart-line"></i> Вывод контакт-центров с нуля</div>
-                    </div>
-                </div>
-                
-                <div class="profile-text-col reveal delay-2">
-                    <div class="profile-quote">
-                        «Сложные системы не пишутся ради красивого кода. Они создаются для того, чтобы уничтожить хаос и заставить бизнес-процессы работать как швейцарские часы.»
-                    </div>
-                    
-                    <p style="margin-bottom: 25px;">
-                        За моими плечами руководство крупными Контакт-Центрами и отделами сбора данных (<i>«Эйчар Софт», «ТочноТест»</i>). Я годами выстраивал сложные архитектуры в AMO CRM, внедрял авто-бонок, телефонию и разрабатывал жесткие системы метрик и KPI для сотен сотрудников.
-                    </p>
-                    <p style="margin-bottom: 25px;">
-                        Когда я глубоко погрузился в производственные процессы завода, я увидел классическую проблему B2B сектора: <b>разрозненность и потерю данных</b>. Инженеры считают спецификации в Excel, менеджеры ведут сделки в CRM, а бухгалтерия начисляет зарплату в третьих программах. Информация теряется между отделами, возникают фатальные ошибки (human error), а расчеты КП затягиваются на часы.
-                    </p>
-                    <p style="color:#fff; font-weight: 600;">
-                        Я принял стратегическое решение — создать <span style="color:var(--brand-red);">ПРУТКОН ОС</span>. Это не просто очередная программа. Это концентрат моего 5-летнего управленческого опыта, превращенный в цифровое Ядро. Я лично спроектировал архитектуру так, чтобы система бесшовно объединила инженерную математику, управление продажами через Bitrix24 и точный расчет Фонда Оплаты Труда.
-                    </p>
-                </div>
-            </div>
-        </section>
+
 
         <!-- 1. ЦЕЛИ И ЗАДАЧИ -->
         <section id="s1-goals" class="slide-section reveal">
@@ -408,7 +838,7 @@
                 </div>
                 <div class="timeline-item reveal">
                     <div class="t-title">Этап 4: Цех и Документооборот (Планирование)</div>
-                    <div class="t-desc">Генерация PDF-чертежей (Интеграция с КБ). Разработка UI-планшетов для Операторов ЧПУ станков. Автоматическая печать бухгалтерских и юридических документов.</div>
+                    <div class="t-desc">Создание чертежей с использованием ИИ (на основании размеров). Разработка UI-планшетов для Операторов ЧПУ станков. Автоматическая печать бухгалтерских и юридических документов.</div>
                 </div>
             </div>
         </section>
@@ -446,23 +876,49 @@
             </div>
             
             <div class="details-grid">
-                <div class="detail-card reveal delay-1" style="grid-column: 1 / -1;">
+                <div class="detail-card reveal delay-1 glow-green" style="grid-column: 1 / -1;">
                     <div class="dc-icon-wrapper green"><i class="fa-solid fa-table-columns"></i></div>
-                    <div class="dc-title">Дашборд и Канбан-логика</div>
+                    <div class="dc-title">Дашборд и Канбан-логика в реальном времени</div>
                     <ul class="feature-list">
-                        <li><b>Финансовая Панель:</b> В верхней части экрана динамически рассчитывается Общая Выручка предприятия и Индикатор Загрузки цеха (%). Это дает директору понимание: берем новые заказы или производство перегружено.</li>
-                        <li><b>Live-Поиск (0 ms delay):</b> Мощный поиск фильтрует тысячи сделок по Имени клиента, Номеру заказа или Артикулу без перезагрузки страницы. Это магия современного JavaScript.</li>
-                        <li><b>Канбан Статусов:</b> Заказы визуально разделены. "Новые" требуют внимания менеджера, "В проверке" ждут ответа директора, "Производство" — уже на станке. Через 3 дня после отгрузки заказ сам улетает в "Архив", чтобы не засорять экран.</li>
+                        <li><b>Облачная синхронизация Supabase Realtime (шина данных):</b> При перетаскивании сделки менеджером или изменении её статуса, WebSocket-соединение мгновенно транслирует апдейт в базу данных. Все открытые сессии у руководства и в цеху обновляются автоматически за &lt;100 мс без перезагрузки страниц.</li>
+                        <li><b>Математический расчет загрузки предприятия:</b> Выручка считается динамической агрегацией: <code>Выручка = &sum; Цена<sub>i</sub></code> для всех активных сделок. Индикатор загрузки цеха высчитывается по объему производства в метрах: <code>Загрузка = (&sum; Длина<sub>активных</sub> / Макс_Объем<sub>месяц</sub>) &times; 100%</code>, помогая вовремя планировать закупки сырья.</li>
+                        <li><b>Live-Поиск без сетевой задержки (0 ms delay):</b> Алгоритм кэширует локальный массив данных и фильтрует сделки по совпадению подстроки в полях <i>Имя клиента, Номер заказа, Артикул, Название</i> с использованием регулярных выражений, снижая нагрузку на сеть до нуля.</li>
+                        <li><b>Канбан Статусов с защитой переходов:</b> Заказы строго разделены. Перевод в статус "Производство" автоматически блокирует поля спецификации от случайных изменений. Автоматический фоновый планировщик через 72 часа после отгрузки переносит сделку в "Архив".</li>
                     </ul>
+
+                    <!-- MOCK UI KPI BOARD -->
+                    <div class="fake-ui-panel">
+                        <div style="font-family: 'Outfit'; font-size: 0.8rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span>Монитор Производства (Live KPI)</span>
+                            <span class="val-green" style="font-size:0.75rem;"><i class="fa-solid fa-circle" style="animation: pulse 1.5s infinite; font-size:0.6rem; vertical-align:middle; margin-right:5px;"></i> Supabase Realtime: ONLINE</span>
+                        </div>
+                        <div class="fake-ui-row">
+                            <span>Активные сделки в цеху:</span>
+                            <span class="val-blue">14 заказов</span>
+                        </div>
+                        <div class="fake-ui-row">
+                            <span>Текущая выручка в работе (&sum; Цена<sub>i</sub>):</span>
+                            <span class="val-green">14 285 000 ₽</span>
+                        </div>
+                        <div class="fake-ui-row" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+                            <div style="display:flex; justify-content:space-between; width:100%;">
+                                <span>Загрузка конвейера (84%):</span>
+                                <span class="val-orange">2 520 м / 3 000 м</span>
+                            </div>
+                            <div class="prog-bar-container">
+                                <div class="prog-bar-fill green" style="width: 84%;"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="detail-card reveal delay-2" style="grid-column: 1 / -1;">
                     <div class="dc-icon-wrapper blue"><i class="fa-solid fa-address-card"></i></div>
                     <div class="dc-title">Интерактивная Карточка Сделки (Deal Card)</div>
                     <div class="dc-text">Клик по сделке открывает её расширенный "паспорт", заменяя десяток вкладок в браузере.</div>
                     <ul class="feature-list blue">
-                        <li><b>Корзина спецификаций:</b> Внутри лежит полный список всего, что менеджер насчитал для конвейера (прутки, замки, ремни, наценки, вес).</li>
-                        <li><b>Чат и Timeline:</b> Прямо в карточке можно оставить текстовый комментарий (например: "Клиент просит скидку"), который по API мгновенно улетит в Битрикс24 всем участникам сделки.</li>
-                        <li><b>Маршрутизация (Routing):</b> Из карточки менеджер одной кнопкой направляет процесс: "Отправить на проверку", "Распечатать КП", или "Отправить в цех".</li>
+                        <li><b>Связанная корзина спецификаций:</b> Хранит полный список комплектующих, прутков, ремней и крепежей. Суммирует общий вес заказа для логистики и выводит маржинальность каждой позиции.</li>
+                        <li><b>Комментарии и Лог Событий (Timeline Audit):</b> Текстовое сообщение менеджера мгновенно отправляется через Webhook API в Битрикс24. Журнал изменений фиксирует автора, дату и старое/новое значение измененных параметров.</li>
+                        <li><b>Интерактивная Маршрутизация:</b> Менеджер в один клик меняет состояние заказа ("Запросить утверждение", "В цех", "Печать КП"), запуская каскадные уведомления в CRM и Telegram-боты.</li>
                     </ul>
                 </div>
             </div>
@@ -476,15 +932,77 @@
                 <p class="section-desc">Ядро системы. Превращает сложные инженерные формулы в простой интерфейс.</p>
             </div>
             <div class="details-grid">
-                <div class="detail-card reveal">
+                <div class="detail-card reveal" style="grid-column: 1 / -1;">
                     <div class="dc-icon-wrapper red"><i class="fa-solid fa-calculator"></i></div>
-                    <div class="dc-title">Безошибочная Математика</div>
+                    <div class="dc-title">Безошибочная Математика и Защита Наценки</div>
                     <ul class="feature-list">
-                        <li><b>Авто-расчет количества:</b> Менеджер вводит лишь габариты (Длину, Ширину, Шаг). Система сама делит длину на шаг, получая точное количество прутков. </li>
-                        <li><b>Расчет Массы:</b> Автоматически вычисляет общий вес металла, умножая количество на вес одного погонного метра из базы.</li>
-                        <li><b>Защита маржи:</b> В итоговую цену аппаратно "зашивается" коэффициент наценки компании. Продать в минус технически невозможно.</li>
-                        <li><b>Сложные Корзины:</b> Возможность собрать длинную спецификацию из нескольких разных транспортеров в один общий заказ-наряд клиента.</li>
+                        <li><b>Автоматический расчет количества прутков:</b> Формула делит общую длину транспортера на шаг: <code>Количество_Прутков = &lfloor; Длина / Шаг &rfloor;</code>. Алгоритм проверяет кратность и выдает предупреждение, если геометрия требует дробных частей.</li>
+                        <li><b>Математическая модель себестоимости:</b>
+                            <br>• Стоимость материалов: <code>Стоимость_Материалов = (Количество_Прутков &times; 350) + (Длина &times; 2 &times; 0.95)</code> (350 руб. — базовая обработка прутка, 0.95 руб./мм — направляющие ленты и крепеж).
+                            <br>• Стоимость работ: <code>Стоимость_Работ = (Длина / 1000) &times; 250</code> руб. (250 руб. за погонный метр сборки).
+                        </li>
+                        <li><b>Аппаратный замок маржи (Markup Protection Lock):</b> Итоговая стоимость рассчитывается как: <code>Итоговая_Цена = (Стоимость_Материалов + Стоимость_Работ) &times; 1.40</code>. Наценка 40% жестко зашита в систему для менеджеров. Попытка вручную продать в минус или без маржи блокируется на уровне кода.</li>
+                        <li><b>Корзина спецификаций:</b> Возможность объединить расчеты нескольких разных транспортеров с индивидуальными параметрами в один общий заказ-наряд, автоматически консолидируя общую стоимость и массу.</li>
+                        <li><b>Приоритет Справочника (Catalog Override):</b> Выбор готового изделия из базы отключает динамический расчет формулы и фиксирует цену за единицу согласно прайс-листу, автоматически сопоставляя складские остатки.</li>
                     </ul>
+
+                    <!-- MOCK UI CALC ESTIMATE BREAKDOWN -->
+                    <div class="fake-ui-panel" style="position: relative;">
+                        <div class="markup-seal">Маржа 40% Заблокирована</div>
+                        <div style="font-family: 'Outfit'; font-size: 0.8rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px;">
+                            Калькулятор сметы (Расчет полотна транспортера)
+                        </div>
+                        <div class="fake-ui-row">
+                            <span>Параметры полотна:</span>
+                            <span class="val-blue">L = 6000 мм (6 м), P = 40 мм, W = 800 мм</span>
+                        </div>
+                        <div class="fake-ui-row">
+                            <span>Расчетное число прутков:</span>
+                            <span class="val-green">&lfloor; 6000 / 40 &rfloor; = 150 шт.</span>
+                        </div>
+                        <table class="spec-table">
+                            <thead>
+                                <tr>
+                                    <th>Статья затрат</th>
+                                    <th>Формула / База</th>
+                                    <th>Без НДС</th>
+                                    <th>С НДС (22%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Материалы (прутки)</td>
+                                    <td>150 прутков &times; 350 ₽</td>
+                                    <td>52 500 ₽</td>
+                                    <td class="val-blue">64 050 ₽</td>
+                                </tr>
+                                <tr>
+                                    <td>Ремни &amp; Комплектующие</td>
+                                    <td>6000 мм &times; 2 &times; 0.95 ₽</td>
+                                    <td>11 400 ₽</td>
+                                    <td class="val-blue">13 908 ₽</td>
+                                </tr>
+                                <tr>
+                                    <td>Работы (сборка цеха)</td>
+                                    <td>6 м &times; 250 ₽</td>
+                                    <td>1 500 ₽</td>
+                                    <td class="val-green">1 830 ₽</td>
+                                </tr>
+                                <tr style="border-top: 1px solid rgba(255,255,255,0.1); font-weight: 800;">
+                                    <td>Себестоимость полная</td>
+                                    <td>Материалы + Работы</td>
+                                    <td>65 400 ₽</td>
+                                    <td>79 788 ₽</td>
+                                </tr>
+                                <tr style="font-weight: 900; background: rgba(244,44,51,0.05);">
+                                    <td style="color: var(--brand-red);">Цена продажи клиенту</td>
+                                    <td style="color: var(--brand-red);">Себестоимость &times; 1.40</td>
+                                    <td style="color: var(--brand-red);">91 560 ₽</td>
+                                    <td class="val-green" style="font-size: 1.1rem;">111 703 ₽</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
@@ -499,29 +1017,157 @@
             
             <div class="step-grid">
                 <div class="step-box reveal delay-1">
-                    <div class="step-box-title"><div class="step-num">1</div> Идентификация Изделия</div>
-                    <p style="color:#b0b5be; font-size:1.05rem; line-height:1.6;">Ввод базовой информации. Артикул генерируется автоматически специальной кнопкой. Привязка к справочнику, выбор "Культуры" применимости и загрузка фото-образца.</p>
+                    <div class="step-box-title"><div class="step-num">1</div> Идентификация техники и транспортеров</div>
+                    <p style="color:#b0b5be; font-size:1.05rem; line-height:1.6;">
+                        Ввод базовой информации о заказе. Уникальный артикул генерируется по маске. Интеграция со справочником техники и транспортеров позволяет мгновенно получить нужные параметры (например, если клиент запрашивает шаг 30 на транспортер конкретной марки и модели техники, база данных автоматически выдает все точные геометрические параметры, ограничения и допуски).
+                    </p>
                 </div>
                 <div class="step-box reveal delay-2">
-                    <div class="step-box-title"><div class="step-num">2</div> Конфигурация Прутков</div>
-                    <p style="color:#b0b5be; font-size:1.05rem; line-height:1.6;">Менеджер задает физические габариты конвейера (Ширина, Длина, Шаг). Программа моментально рассчитывает <b>базовое количество прутков</b>. Далее из прайс-листа выбирается материал (сталь/оцинковка).</p>
+                    <div class="step-box-title"><div class="step-num">2</div> Математика и Конфигурация Прутков</div>
+                    <p style="color:#b0b5be; font-size:1.05rem; line-height:1.6;">
+                        Менеджер вводит длину, ширину и шаг полотна. Система автоматически вычисляет количество прутков и общую массу металла. Подбирается марка стали (65G, оцинковка, нержавейка) и диаметр (8-16 мм). Алгоритм проверяет прочность ремней на разрыв относительно веса полотна и сигнализирует при перегрузках.
+                    </p>
                 </div>
                 <div class="step-box reveal delay-1">
-                    <div class="step-box-title"><div class="step-num">3</div> Тяговые элементы</div>
-                    <p style="color:#b0b5be; font-size:1.05rem; line-height:1.6;">Выбор "скелета" транспортера: ремни, цепи или ленты. В зависимости от выбранной длины на Шаге 2, алгоритм сам понимает, сколько погонных метров или звеньев потребуется.</p>
+                    <div class="step-box-title"><div class="step-num">3</div> Подбор Тяговых Элементов</div>
+                    <p style="color:#b0b5be; font-size:1.05rem; line-height:1.6;">
+                        Выбор основы транспортера: ремни (EP-800, EP-1000, 3 или 4 корда), приводные цепи или ленты. Длина ремня автоматически рассчитывается по огибающей траектории: <code>L = 2 &times; Длина + &pi; &times; D<sub>вала</sub></code>. Система сама переводит погонные метры в точное число звеньев цепи или модулей.
+                    </p>
                 </div>
                 <div class="step-box reveal delay-2">
-                    <div class="step-box-title"><div class="step-num">4</div> Комплектующие (Smart Search)</div>
-                    <p style="color:#b0b5be; font-size:1.05rem; line-height:1.6;">Встроена умная поисковая строка по всем 1000+ деталям. Ищет по Артикулу и Имени, выдавая визуальные карточки с <b>фотографиями и ценой</b>. Количество деталей (заклепок, шайб) пересчитывается автоматически.</p>
+                    <div class="step-box-title"><div class="step-num">4</div> Спецификация и Крепеж (Smart Search)</div>
+                    <p style="color:#b0b5be; font-size:1.05rem; line-height:1.6;">
+                        Встроенный умный поиск по 1000+ деталям с отображением фотографий, складских остатков и цен поставщика. Система автоматически рассчитывает количество крепежных заклепок и хомутов исходя из числа ремней (2-ременный или 3-ременный): <code>Количество = Количество_Прутков &times; 2 &times; Крепеж_на_Пруток</code>.
+                    </p>
                 </div>
                 <div class="step-box reveal delay-3" style="grid-column: 1 / -1; border-color:var(--brand-red); background:linear-gradient(145deg, rgba(244,44,51,0.08), rgba(10,10,15,0.9));">
-                    <div class="step-box-title" style="font-size:1.2rem; color:#fff;"><div class="step-num" style="background:var(--brand-red); color:#fff;">5</div> Панель Решений и Маршрутизация</div>
+                    <div class="step-box-title" style="font-size:1.2rem; color:#fff;"><div class="step-num" style="background:var(--brand-red); color:#fff;">5</div> Валидация, Соединения и Маршрутизация</div>
                     <p style="color:#d1d5db; font-size:1.15rem; line-height:1.7;">
-                        Финальный экран. Здесь выбирается тип соединения конвейера (с фото-подсказками: механический, замок). <br><br>Здесь же находится жестко зашитая <b>Панель Решений</b>. Менеджер выбирает, что сделать с собранным заказом:<br>
-                        <b style="color:var(--brand-red);">1.</b> Сформировать Коммерческое Предложение (готовится к печати).<br>
-                        <b style="color:var(--brand-red);">2.</b> Сохранить с проверкой (Отправить на аудит Алексею Власову).<br>
-                        <b style="color:var(--brand-red);">3.</b> Сформировать задание на Чертеж (Передать в КБ Данилу).
+                        Финальный экран. Выбирается тип соединения полотна (замок механический, резиновый внахлест). <br>
+                        Фоновый валидатор проверяет спецификацию на логические нестыковки (наличие нулевых цен, дефицит на складе, пустой шаг). При обнаружении ошибок кнопка сохранения блокируется. Менеджер выбирает путь прохождения заказа:<br>
+                        <b style="color:var(--brand-red);">1.</b> Сформировать Коммерческое Предложение (подготовка бланка к печати).<br>
+                        <b style="color:var(--brand-red);">2.</b> Направить на аудит (отправка сметы и ТЗ на проверку руководству).<br>
+                        <b style="color:var(--brand-red);">3.</b> Сформировать задание на чертеж (автоматическое создание чертежей с использованием ИИ на основании размеров).
                     </p>
+                </div>
+            </div>
+
+            <!-- 5-STEP VISUAL PROGRESS STEPPER -->
+            <div class="stepper-container reveal delay-3">
+                <div class="step-node completed">
+                    <div class="step-circle"><i class="fa-solid fa-check"></i></div>
+                    <div class="step-label">Шаг 1: Техника и ТР</div>
+                </div>
+                <div class="step-node completed">
+                    <div class="step-circle"><i class="fa-solid fa-check"></i></div>
+                    <div class="step-label">Шаг 2: Расчёт</div>
+                </div>
+                <div class="step-node completed">
+                    <div class="step-circle"><i class="fa-solid fa-check"></i></div>
+                    <div class="step-label">Шаг 3: Лента</div>
+                </div>
+                <div class="step-node active">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Шаг 4: Комплект</div>
+                </div>
+                <div class="step-node">
+                    <div class="step-circle">5</div>
+                    <div class="step-label">Шаг 5: Проверка</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6b. УЧЕТ ТМЦ И ЦИФРОВОЙ СКЛАД -->
+        <section id="s6b-warehouse" class="slide-section reveal" style="background:var(--bg-panel); border-top: 1px solid var(--border-glass);">
+            <div class="section-header">
+                <span class="section-badge blue"><i class="fa-solid fa-warehouse"></i> 100% Внедрено</span>
+                <h1 class="section-title text-gradient">Учет ТМЦ и Склад</h1>
+                <p class="section-desc">Интегрированный партионный учет в реальном времени. Автоматическое распределение логистики и группировка остатков.</p>
+            </div>
+            
+            <div class="details-grid">
+                <div class="detail-card reveal delay-1">
+                    <div class="dc-icon-wrapper blue"><i class="fa-solid fa-folder-tree"></i></div>
+                    <div class="dc-title">Группируемые Остатки ТМЦ</div>
+                    <ul class="feature-list blue">
+                        <li><b>Иерархическое дерево папок:</b> Автоматически группирует номенклатуру по категориям. Группа <i>«Ленты (рулоны, заготовки, полосы)»</i> суммирует погонные метры основного закупа, обрезных заготовок и нарезных полос. Группа <i>«Материалы»</i> объединяет весовой круглый прокат (стали) в килограммах.</li>
+                        <li><b>Динамическая интерактивность:</b> Сворачивание и развертывание групп в один клик с индикацией суммарных остатков и автоматической подсветкой дефицитных позиций.</li>
+                        <li><b>Двусторонний пересчет величин:</b> При оприходовании весового проката менеджер может ввести вес в тоннах, система пересчитает его в килограммы и погонные метры на основе плотности стали: <code>Длина<sub>м.п.</sub> = Вес<sub>кг</sub> / Вес_1_метра</code>.</li>
+                    </ul>
+                </div>
+
+                <div class="detail-card reveal delay-2">
+                    <div class="dc-icon-wrapper red"><i class="fa-solid fa-truck-ramp-box"></i></div>
+                    <div class="dc-title">Пакетное Оприходование и ТЗР</div>
+                    <p class="dc-text">Приход сырья оформляется накладными. Система автоматически распределяет стоимость доставки на себестоимость единицы товара пропорционально весу или стоимости закупки.</p>
+                    <ul class="feature-list">
+                        <li><b>Пропорционально весу (по умолчанию):</b> Доля доставки: <code>Доля<sub>доставки</sub> = Вес<sub>i</sub> / Общий_Вес</code>.</li>
+                        <li><b>Пропорционально стоимости:</b> Доля доставки: <code>Доля<sub>доставки</sub> = Стоимость_без_НДС<sub>i</sub> / Общая_Стоимость_без_НДС</code>.</li>
+                        <li><b>Себестоимость единицы:</b>
+                            <br>• Доставка на ед.: <code>Доставка_на_ед<sub>i</sub> = (Общая_Доставка &times; Доля<sub>доставки</sub>) / Количество<sub>i</sub></code> (в пересчете без НДС).
+                            <br>• Итоговая себестоимость с учетом НДС: <code>Себестоимость_с_НДС<sub>i</sub> = (Цена_без_НДС<sub>i</sub> + Доставка_на_ед<sub>i</sub>) &times; (1 + НДС)</code> (НДС 22% по умолчанию).
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="detail-card reveal delay-3" style="grid-column: 1 / -1; border-color: var(--accent-blue);">
+                    <div class="dc-icon-wrapper blue"><i class="fa-solid fa-code"></i></div>
+                    <div class="dc-title">Программные функции Склада и Аудит НДС</div>
+                    <ul class="feature-list blue">
+                        <li><b>window.renderInventory():</b> Иерархическая группировка остатков на клиенте с автоматическим расчетом агрегированных показателей и сохранением состояния раскрытия папок в <code>localStorage</code>.</li>
+                        <li><b>window.onSpecFinancialCalc() / window.onBeltSpecCalc():</b> Интерактивные калькуляторы в формах оприходования с автоматическим расчетом НДС (по формуле <code>Цена_с_НДС = Цена_без_НДС &times; Q</code>).</li>
+                        <li><b>window.onOperationFinancialCalc():</b> Расчет средневзвешенной стоимости ТМЦ и себестоимости погонного метра с учетом НДС и распределенных ТЗР.</li>
+                        <li><b>window.saveOperation():</b> Проведение накладной (списание сырья, зачисление готовой продукции), запись в журнал аудита и отправка в таблицы <code>warehouse_inventory</code>, <code>metal_batches</code> и <code>warehouse_log</code> базы Supabase.</li>
+                        <li><b>Верификация расчёта НДС:</b> Алгоритмы проверены на отсутствие ошибок двойного начисления налога. Все формы считают налог один раз, а функция проведения накладных <code>saveOperation()</code> берет уже рассчитанную сумму с НДС напрямую из формы, исключая повторное умножение.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6c. ПРОИЗВОДСТВЕННЫЙ КОНВЕЙЕР -->
+        <section id="s6c-production" class="slide-section reveal">
+            <div class="section-header">
+                <span class="section-badge green"><i class="fa-solid fa-industry"></i> 100% Внедрено</span>
+                <h1 class="section-title text-gradient">Производственный Конвейер</h1>
+                <p class="section-desc">Пошаговое изготовление деталей и сквозной пересчет себестоимости полуфабрикатов на каждом этапе передела.</p>
+            </div>
+            
+            <div class="details-grid">
+                <div class="detail-card reveal delay-1" style="grid-column: 1 / -1;">
+                    <div class="dc-icon-wrapper green"><i class="fa-solid fa-arrows-spin"></i></div>
+                    <div class="dc-title">Четыре Технологических Передела</div>
+                    <ul class="feature-list">
+                        <li><b>Передел 1: Обрезка кромок ленты (Trim Borders):</b>
+                            <br>• <b>Вход:</b> Рулон основной ленты (например, ширина 940 мм).
+                            <br>• <b>Действие:</b> Срез технологических бортов для выравнивания (по умолчанию 25 мм с каждого края, итого 50 мм). Новая ширина заготовки становится 890 мм.
+                            <br>• <b>Математика себестоимости:</b> Стоимость погонного метра заготовки равна стоимости исходного метра (<code>Цена<sub>м.п.</sub><sup>нов</sup> = Цена<sub>м.п.</sub><sup>исх</sup></code>), а себестоимость за квадратный метр пересчитывается в большую сторону: <code>Цена<sub>м²</sub><sup>нов</sup> = Цена<sub>м.п.</sub><sup>исх</sup> / Ширина<sub>нов</sub> (м)</code>. Исходная лента списывается, а на баланс зачисляется полуфабрикат <i>«Лента-Заготовка»</i>.
+                        </li>
+                        <li><b>Передел 2: Нарезка полос (Slice Strips):</b>
+                            <br>• <b>Вход:</b> Рулон-заготовка (890 мм).
+                            <br>• <b>Действие:</b> Продольная резка на полосы заданной ширины (например, 22 мм).
+                            <br>• <b>Математика:</b> Выход полос с рулона: <code>Количество = &lfloor; Ширина<sub>заготовки</sub> / Ширина<sub>полосы</sub> &rfloor;</code>. Себестоимость погонного метра заготовки распределяется поровну между получившимися полосами: <code>Цена<sub>полосы</sub> = Цена<sub>заготовки</sub> / Количество</code>. На склад поступает полуфабрикат <i>«Лента-Полоса»</i>.
+                        </li>
+                        <li><b>Передел 3: Рубка заготовок прутка (Rods Blanks):</b>
+                            <br>• <b>Сырье:</b> Круглый прокат (сталь) или готовая лента-полоса.
+                            <br>• <b>Математика круглого проката (хлыст 6000 мм):</b> Из хлыста длиной <code>T</code> нарезаются заготовки длиной <code>D</code> с зазором на рез <code>S = 10 мм</code>. Количество заготовок <code>G = &lfloor; T / D &rfloor;</code>. Если технологический остаток с учетом зазоров уходит в минус, то <code>G = G - 1</code>. Количество резов <code>F = G - 1</code>.
+                            <br>• <b>Себестоимость заготовки без НДС:</b> <code>Q<sub>без_НДС</sub> = (Цена<sub>метра</sub> &times; (T / 1000) / G) + Работа<sub>резка</sub></code> (где <code>Работа<sub>резка</sub></code> — стоимость работы оператора). Цена с НДС: <code>Цена<sub>с_НДС</sub> = (Q<sub>без_НДС</sub> + Работа<sub>резка</sub>) &times; (1 + НДС)</code>.
+                        </li>
+                        <li><b>Передел 4: Цепочка сборки изделий:</b>
+                            <br>• <b>Сдвоенный пруток:</b> <code>Себестоимость = (Цена<sub>заготовки</sub> &times; 2) + Цена<sub>хомутов</sub> + Работа<sub>сборка</sub></code>. Прайсовая цена с НДС: <code>Цена<sub>сдвоенного</sub> = Себестоимость &times; 2 &times; (1 + НДС)</code>.
+                            <br>• <b>Сложные исполнения:</b> Последовательная обработка по цепочке: <i>Прямой пруток &rarr; Гнутый пруток &rarr; Обрезиненный пруток &rarr; Игольчатый пруток &rarr; Пальчиковый пруток</i>. Каждое звено списывает предыдущий полуфабрикат и начисляет стоимость работ и комплектующих.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="detail-card reveal delay-2" style="grid-column: 1 / -1; border-color: var(--accent-green);">
+                    <div class="dc-icon-wrapper green"><i class="fa-solid fa-code"></i></div>
+                    <div class="dc-title">Программные функции Производственного Модуля (rods_production.js)</div>
+                    <ul class="feature-list">
+                        <li><b>window.suggestBlank(step):</b> Автоматический расчет оптимального раскроя 6-метрового металлического хлыста на заготовки с учетом зазора на рез (10 мм) и базовых трудозатрат сборки.</li>
+                        <li><b>window.updatePricesFromDirectory():</b> Каскадный автоматический пересчет цен всей базы (заготовок, стандартных прутков, гнутых, обрезиненных, сдвоенных) при изменении базовых цен на металл/ленту в справочнике.</li>
+                        <li><b>window.updateProductionRequirements():</b> live-контроль баланса ТМЦ перед производственным пуском. Сверяет потребность в металле (кг) или комплектующих (шт) с текущими остатками выбранной партии и блокирует запуск при нехватке.</li>
+                        <li><b>window.submitProductionRun():</b> Проведение производства (списание сырья со склада партии, зачисление готового изделия на склад в инвентарь), создание записи в журнале аудита и синхронизация с таблицами <code>warehouse_inventory</code> и <code>metal_batches</code> в Supabase.</li>
+                    </ul>
                 </div>
             </div>
         </section>
@@ -534,14 +1180,51 @@
                 <p class="section-desc">Жесткая иерархия доступов. Ни один сомнительный заказ не уходит в работу без ведома руководства.</p>
             </div>
             <div class="details-grid">
-                <div class="detail-card reveal">
+                <div class="detail-card reveal" style="grid-column: 1 / -1;">
                     <div class="dc-icon-wrapper red"><i class="fa-solid fa-user-shield"></i></div>
-                    <div class="dc-title">Иерархия Решений</div>
+                    <div class="dc-title">Безопасность и разграничение прав</div>
                     <ul class="feature-list">
-                        <li><b>Запрос сведений:</b> Если рядовой менеджер не уверен в параметрах (нестандартный шаг), он нажимает кнопку, и заказ замораживается в статусе "В проверке".</li>
-                        <li><b>Approval Box:</b> Кнопка "Утвердить чертеж" появляется на экране <b>только</b> у пользователя с правами Администратора или Руководителя. Обычный менеджер технически не может сам себе утвердить заказ.</li>
-                        <li><b>Блокировка редактирования:</b> Как только заказ утвержден и перешел в статус "Производство", кнопка "Редактировать параметры" скрывается на уровне кода. Никто не поменяет ТЗ задним числом.</li>
+                        <li><b>Матрица ролевого доступа (Role-Based Access):</b> Реализовано жесткое разделение прав. Обычный Менеджер имеет права только на создание черновиков, добавление позиций в корзину и отправку на проверку. Администраторы и Руководители получают доступ к редактированию базовых прайс-листов и утверждению спецификаций.</li>
+                        <li><b>Запрос сведений и аудит:</b> Если менеджер сталкивается с нестандартным заказом (например, шаг прутка выходит за рамки ограничений культуры), он нажимает "Запросить проверку", отправляя заказ в статус "В проверке" и блокируя дальнейшие ручные корректировки до решения директора.</li>
+                        <li><b>Аппаратная блокировка записи (State Lock):</b> В момент утверждения сделки и перевода в статус "Производство", в базе данных Supabase выставляется флаг блокировки. Любая попытка изменить чертеж, параметры прутка, шаг или цену со стороны клиента или менеджера аппаратно отклоняется сервером безопасности.</li>
                     </ul>
+
+                    <!-- MOCK UI ROLE MATRIX & SECURITY LOCK -->
+                    <div class="fake-ui-panel">
+                        <div style="font-family: 'Outfit'; font-size: 0.8rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span>Матрица безопасности и Статус Сделки</span>
+                            <span class="val-red" style="font-size:0.75rem;"><i class="fa-solid fa-lock" style="margin-right:5px;"></i> Спецификация заблокирована</span>
+                        </div>
+                        <div class="matrix-grid">
+                            <div class="matrix-card">
+                                <div class="matrix-role"><i class="fa-solid fa-user-tie val-blue"></i> Менеджер</div>
+                                <div class="matrix-perm">
+                                    • Создание черновиков<br>
+                                    • Заполнение корзины<br>
+                                    • <span class="val-red">Редактирование: BLOCKED</span>
+                                </div>
+                            </div>
+                            <div class="matrix-card">
+                                <div class="matrix-role"><i class="fa-solid fa-user-gear val-orange"></i> Конструктор</div>
+                                <div class="matrix-perm">
+                                    • Импорт ТЗ в CAD-систему<br>
+                                    • Загрузка чертежа (PDF)<br>
+                                    • <span class="val-red">Редактирование: BLOCKED</span>
+                                </div>
+                            </div>
+                            <div class="matrix-card">
+                                <div class="matrix-role"><i class="fa-solid fa-user-shield val-green"></i> Администратор</div>
+                                <div class="matrix-perm">
+                                    • Справочники цен<br>
+                                    • Налоговые ставки (НДС)<br>
+                                    • <span class="val-green">Разблокировка записей</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 10px;">
+                            <div class="db-stamp">[ЗАБЛОКИРОВАНО В БД: СТАТУС - ПРОИЗВОДСТВО]</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -554,14 +1237,39 @@
                 <p class="section-desc">Двусторонняя связь отделов продаж и производства. Мы исключили двойной ручной ввод данных.</p>
             </div>
             <div class="details-grid">
-                <div class="detail-card reveal">
+                <div class="detail-card reveal" style="grid-column: 1 / -1;">
                     <div class="dc-icon-wrapper blue"><i class="fa-solid fa-cloud"></i></div>
-                    <div class="dc-title">Бесшовный Обмен API</div>
+                    <div class="dc-title">Двусторонний API-Обмен в реальном времени</div>
                     <ul class="feature-list blue">
-                        <li><b>Авто-создание контактов:</b> Вводим номер телефона в ПРУТКОН ОС -> программа через Webhook ищет клиента в CRM. Если его нет — создает новую карточку лида за 1 секунду.</li>
-                        <li><b>Синхронизация Бюджетов:</b> Менеджер собрал сложную смету в Калькуляторе -> итоговая цена мгновенно обновляется в бюджете Сделки в Битриксе. Аналитика продаж всегда точна.</li>
-                        <li><b>Авто-постановка Задач:</b> Менеджер нажимает "Запросить утверждение" -> Битрикс сам ставит задачу "Срочно проверьте чертеж" на Директора с уведомлением в телефон.</li>
+                        <li><b>Умный поиск и автосоздание контактов:</b> При вводе номера телефона клиента в ПРУТКОН ОС, система по API отправляет запрос <code>crm.contact.list</code> в CRM. Если контакт найден — подтягиваются его реквизиты. Если нет — отправляется POST-запрос <code>crm.lead.add</code>, регистрируя новый лид за &lt;500 мс.</li>
+                        <li><b>Автоматическая синхронизация бюджетов:</b> При сохранении корзины калькулятора, ПРУТКОН ОС выполняет REST-запрос <code>crm.deal.update</code>, обновляя общую сумму сделки в CRM (поле <code>OPPORTUNITY</code>) и отправляя подробный отчет-спецификацию в таймлайн сделки.</li>
+                        <li><b>Интеграция задач и автоуведомлений:</b> Перевод сделки в статус проверки автоматически создает задачу <code>tasks.task.add</code> в Битрикс24 на директора с дедлайном 2 часа и присылает push-уведомление в мобильное приложение.</li>
                     </ul>
+
+                    <!-- MOCK UI CRM INTEGRATION TIMELINE -->
+                    <div class="fake-ui-panel">
+                        <div style="font-family: 'Outfit'; font-size: 0.8rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span>Интеграционная шина API (Лог синхронизации Bitrix24)</span>
+                            <span class="val-blue" style="font-size:0.75rem;"><i class="fa-solid fa-sync" style="animation: pulse 1.5s infinite; margin-right:5px;"></i> API Active</span>
+                        </div>
+                        <div class="crm-timeline">
+                            <div class="crm-event">
+                                <div class="crm-event-time">17:15:32 (REST API - crm.contact.list)</div>
+                                <div class="crm-event-title">Поиск контакта по номеру +7 (999) 123-45-67</div>
+                                <div class="crm-event-desc">Контакт найден в CRM: «ИП Иванов А.В.». Реквизиты и ИНН подтянуты в карточку.</div>
+                            </div>
+                            <div class="crm-event">
+                                <div class="crm-event-time">17:15:34 (REST API - crm.deal.update)</div>
+                                <div class="crm-event-title">Обновление бюджета сделки #10045</div>
+                                <div class="crm-event-desc">Бюджет сделки изменен на <span class="val-green">111 703 ₽</span>. Спецификация прикреплена к таймлайну.</div>
+                            </div>
+                            <div class="crm-event">
+                                <div class="crm-event-time">17:15:35 (REST API - tasks.task.add)</div>
+                                <div class="crm-event-title">Создана задача директору</div>
+                                <div class="crm-event-desc">Задача: «Проверить расчет по сделке #10045 (нестандартный шаг 22 мм)». Статус: Назначена.</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -576,16 +1284,57 @@
             <div class="details-grid">
                 <div class="detail-card reveal delay-1" style="grid-column: 1 / -1;">
                     <div class="dc-icon-wrapper red"><i class="fa-solid fa-microchip"></i></div>
-                    <div class="dc-title">Нейро-подобное определение колонок</div>
+                    <div class="dc-title">Эвристическое Regex-определение колонок</div>
                     <p class="dc-text">
-                        Когда поставщик присылает прайс-лист в Excel (<code>.xlsx</code>), он всегда имеет непредсказуемые названия колонок. Наш алгоритм делает грязную работу за вас:
+                        Прайс-листы поставщиков всегда имеют хаотичную разметку. Наш алгоритм в фоновом режиме анализирует структуру Excel-файлов, используя регулярные выражения для автоматического связывания полей номенклатуры:
                     </p>
                     <ul class="feature-list">
-                        <li><b>Считывание в браузере:</b> Загруженный тяжелый файл мгновенно парсится прямо на процессоре компьютера пользователя, обеспечивая феноменальную скорость загрузки.</li>
-                        <li><b>Анализ заголовков (Regex):</b> Программа сканирует шапку таблицы. Если алгоритм видит слова <i>"арт", "article", "код"</i> — он <b>сам автоматически</b> маппит (назначает) эту колонку как "Артикул". Если видит <i>"цена", "прайс", "руб"</i> — понимает, что это Цена.</li>
-                        <li><b>Бескодовый UI Маппинга:</b> Если алгоритм сомневается из-за странного форматирования поставщика, он рисует красивый интерфейс селекторов. Менеджер просто указывает: <i>"Столбец C — это Название"</i>. Никаких IT-знаний не требуется.</li>
-                        <li><b>Сверхзвуковая заливка:</b> Как только колонки связаны, загрузка 10 000 позиций в локальную базу <code>dbProducts</code> занимает доли секунды. Актуальные цены моментально применяются ко всем новым расчетам.</li>
+                        <li><b>Считывание в браузере (Sandbox Parsing):</b> Импортируемый файл парсится в памяти браузера клиента, что позволяет обработать прайс на 10 000+ строк менее чем за 800 мс без отправки тяжелых файлов на сервер.</li>
+                        <li><b>Regex-анализ шапки таблицы:</b>
+                            <br>• Артикул / SKU: `/арт|код|art|sku/i`
+                            <br>• Цена за единицу: `/цен|прайс|price|cost|сумм/i`
+                            <br>• Остатки на складе: `/остат|налич|stock|кол|qty/i`
+                            <br>• Наименование: `/назв|имя|name|товар|номен/i`
+                        </li>
+                        <li><b>Интерактивный UI Маппинга:</b> Если алгоритм сомневается из-за сложного форматирования, он выводит селекторы колонок. Менеджер вручную сопоставляет столбцы за пару кликов, и данные мгновенно загружаются в локальную БД.</li>
                     </ul>
+
+                    <!-- MOCK UI DRAG & DROP EXCEL MAPPER -->
+                    <div class="excel-dropzone">
+                        <div class="excel-icon-row">
+                            <i class="fa-solid fa-file-excel"></i>
+                        </div>
+                        <div style="font-family: 'Outfit'; font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 5px;">
+                            Перетащите прайс-лист (.xlsx) для авто-импорта
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+                            Файл анализируется локально. Шаг сетки, цены и остатки будут определены автоматически.
+                        </div>
+                        
+                        <div style="border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 20px;">
+                            <div style="font-family: 'Outfit'; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; text-align: left;">
+                                Результат автоматического сопоставления колонок:
+                            </div>
+                            <div class="excel-map-grid">
+                                <div class="excel-map-tag">
+                                    <span class="file-col">Колонка B: "Код_Товара"</span>
+                                    <span class="db-attr"><i class="fa-solid fa-link"></i> Артикул (SKU)</span>
+                                </div>
+                                <div class="excel-map-tag">
+                                    <span class="file-col">Колонка D: "Наименование"</span>
+                                    <span class="db-attr"><i class="fa-solid fa-link"></i> Название</span>
+                                </div>
+                                <div class="excel-map-tag">
+                                    <span class="file-col">Колонка G: "Цена (с НДС)"</span>
+                                    <span class="db-attr"><i class="fa-solid fa-link"></i> Стоимость</span>
+                                </div>
+                                <div class="excel-map-tag">
+                                    <span class="file-col">Колонка H: "Кол-во на складе"</span>
+                                    <span class="db-attr"><i class="fa-solid fa-link"></i> Остаток ТМЦ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -598,13 +1347,43 @@
                 <p class="section-desc">Мощные корпоративные инструменты для поддержания абсолютной чистоты и консистентности номенклатуры.</p>
             </div>
             <div class="details-grid">
-                <div class="detail-card reveal">
+                <div class="detail-card reveal" style="grid-column: 1 / -1;">
                     <div class="dc-icon-wrapper blue"><i class="fa-solid fa-broom"></i></div>
-                    <div class="dc-title">Санитар Базы Данных</div>
+                    <div class="dc-title">Санитарная очистка базы данных и Склейка Дубликатов</div>
                     <ul class="feature-list blue">
-                        <li><b>Массовая Очистка:</b> Наша авторская гордость. Одно нажатие кнопки "Запустить Веник" — и алгоритм выметает все пустые или битые строки из огромной базы.</li>
-                        <li><b>Склейка Дубликатов:</b> При импорте разных прайсов часто плодятся одинаковые болты. "Веник" автоматически находит дубликаты по Артикулу и аккуратно <b>склеивает их в одну единую карточку</b>, сохраняя историю изменения цены. База всегда идеально чистая, без мусора.</li>
+                        <li><b>Автоматический клининг базы ("Веник"):</b> Специальный фоновый скрипт выметает пустые строки, записи без цен, некорректные артикулы и случайные пробелы, поддерживая производительность БД на максимальном уровне.</li>
+                        <li><b>Интеллектуальное слияние дубликатов (Deduplication):</b> Алгоритм нормализует артикулы товаров (приведение к нижнему регистру, удаление пробелов, дефисов и спецсимволов). При нахождении совпадений система объединяет карточки: сохраняет самую раннюю дату поступления, суммирует складские остатки и обновляет цену до последней актуальной, предотвращая путаницу в расчетах.</li>
                     </ul>
+
+                    <!-- MOCK UI DUPLICATE MERGE VISUAL -->
+                    <div class="merge-container">
+                        <div class="merge-box before">
+                            <div class="merge-header red"><i class="fa-solid fa-triangle-exclamation"></i> До чистки ("Веник" / PIM)</div>
+                            <div class="merge-item">
+                                <span>Артикул: PRUT-8-65G </span>
+                                <span>Остаток: 120 шт. | 350 ₽</span>
+                            </div>
+                            <div class="merge-item" style="color: #ff4b4b;">
+                                <span>Артикул: prut_8_65g (Дубликат)</span>
+                                <span>Остаток: 50 шт. | 390 ₽</span>
+                            </div>
+                            <div class="merge-item" style="color: #ff4b4b;">
+                                <span>Артикул: PRUT 8 65G (Дубликат)</span>
+                                <span>Остаток: 10 шт. | 400 ₽</span>
+                            </div>
+                        </div>
+                        <div class="merge-box after">
+                            <div class="merge-header green"><i class="fa-solid fa-circle-check"></i> Результат слияния</div>
+                            <div class="merge-item" style="font-weight: 700; color: #fff;">
+                                <span>Артикул: prut-8-65g (Унифицирован)</span>
+                                <span>Сумма: 180 шт. | 390 ₽</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 15px; line-height: 1.4;">
+                                <i class="fa-solid fa-info-circle val-blue"></i>
+                                Удалено 2 избыточные записи из базы данных. Объединенный остаток: 120 + 50 + 10 = 180 шт. Установлена последняя актуальная цена за единицу.
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -619,12 +1398,34 @@
             <div class="details-grid">
                 <div class="detail-card reveal delay-1" style="grid-column: 1 / -1;">
                     <div class="dc-icon-wrapper red"><i class="fa-solid fa-sliders"></i></div>
-                    <div class="dc-title">Динамическая Панель Управления</div>
+                    <div class="dc-title">Динамическая Панель Управления и JSONB-справочники</div>
                     <ul class="feature-list">
-                        <li><b>Управление Справочниками без кода:</b> Если на заводе появился новый тип металла, новый цвет ленты или новая категория, руководителю не нужно вызывать программиста. Он заходит в панель "Справочники" и нажимает "Добавить". Это новое значение моментально появляется во всех выпадающих списках интерфейса у всего отдела продаж.</li>
-                        <li><b>Глобальные Финансовые Коэффициенты:</b> Прямо в настройках администратор может изменить налоговую ставку (НДФЛ), процент вычета в Фонд Оплаты Труда (ФОТ) или задать новую базовую наценку компании. Математика расчетов всей программы мгновенно перестроится.</li>
-                        <li><b>Структурированные базы:</b> Справочники (типы замков, культуры) хранятся в отдельных структурированных JSON-массивах, что делает базу данных невероятно легкой и быстрой на чтение.</li>
+                        <li><b>Управление Справочниками без программистов:</b> Если на заводе появляется новый тип металла, новый цвет ленты, параметры замков или новая категория комплектующих, администратор добавляет их в панели настроек. Значения мгновенно появляются во всех выпадающих списках у менеджеров.</li>
+                        <li><b>Глобальные Коэффициенты в реальном времени:</b> Изменение налоговой ставки (НДС 22%), базовой ставки НДФЛ (13%), процента отчисления в ФОТ (25%) или стоимости работы оператора мгновенно пересчитывает все формулы калькуляторов на лету для всех пользователей.</li>
+                        <li><b>Структурированное хранение данных:</b> Все динамические справочники хранятся в Supabase в виде оптимизированных JSON-объектов в единой таблице <code>system_settings</code>, обеспечивая высокую скорость чтения данных.</li>
                     </ul>
+
+                    <!-- MOCK UI JSON SETTINGS VIEWER -->
+                    <div class="fake-ui-panel">
+                        <div style="font-family: 'Outfit'; font-size: 0.8rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span>Конфигурационный JSON (База настроек Supabase)</span>
+                            <span class="val-orange" style="font-size:0.75rem;"><i class="fa-solid fa-code" style="margin-right:5px;"></i> system_settings</span>
+                        </div>
+                        <pre class="code-json"><code>{
+  <span class="key">"vat_rate"</span>: <span class="number">0.22</span>, <span class="comment">// НДС 22% по умолчанию</span>
+  <span class="key">"ndfl_rate"</span>: <span class="number">0.13</span>, <span class="comment">// НДФЛ 13%</span>
+  <span class="key">"fot_percent"</span>: <span class="number">0.25</span>, <span class="comment">// 25% от прибыли в ФОТ</span>
+  <span class="key">"cutting_kerf"</span>: <span class="number">10</span>, <span class="comment">// Зазор реза хлыста в мм</span>
+  <span class="key">"base_materials"</span>: {
+    <span class="key">"steel_65G_price_kg"</span>: <span class="number">145.00</span>,
+    <span class="key">"belt_EP800_price_mp"</span>: <span class="number">950.00</span>
+  },
+  <span class="key">"labor_rates"</span>: {
+    <span class="key">"rod_cutting_rate"</span>: <span class="number">30.00</span>, <span class="comment">// руб. за один рез</span>
+    <span class="key">"belt_assembly_rate_mp"</span>: <span class="number">250.00</span> <span class="comment">// руб. за погонный метр</span>
+  }
+}</code></pre>
+                    </div>
                 </div>
             </div>
         </section>
@@ -637,14 +1438,75 @@
                 <p class="section-desc">Превращаем сложный инженерный расчет в красивый и понятный для клиента документ за один клик.</p>
             </div>
             <div class="details-grid">
-                <div class="detail-card reveal">
+                <div class="detail-card reveal" style="grid-column: 1 / -1;">
                     <div class="dc-icon-wrapper blue"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-                    <div class="dc-title">Печать Спецификаций</div>
+                    <div class="dc-title">Адаптивная Печать и Экспорт Спецификаций</div>
                     <ul class="feature-list blue">
-                        <li>Как только корзина собрана в Калькуляторе или Мастере Заказов, менеджер просто нажимает кнопку "Печать".</li>
-                        <li>Программа <b>автоматически перестраивает интерфейс</b>: очищает экран от всех рабочих кнопок, убирает черные фоны дизайна и формирует строгий, светлый, профессиональный бланк Коммерческого Предложения.</li>
-                        <li>В бланке прописана подробнейшая спецификация изделия (размеры, шаг, итоговый вес металла), общая цена и контактные данные менеджера. Документ можно сразу выгрузить в PDF или пустить на принтер.</li>
+                        <li><b>Автоматическая смена стилей (@media print):</b> В один клик интерфейс скрывает боковую панель навигации, кнопки управления, темный фон и градиенты. Оформление переключается на строгий светлый дизайн с высокой контрастностью текста для экономии тонера принтеров при печати.</li>
+                        <li><b>Полная конструкторская спецификация:</b> На бланк выводятся чертежи (при наличии), подробные размеры полотна (Длина L, Ширина W, Шаг P), тип соединения (замок), общий вес металла и крепежей, а также ФИО ответственного менеджера.</li>
+                        <li><b>Детализация налогообложения:</b> Стоимость прозрачно разбивается на цену без НДС, сумму налога НДС (22%) и итоговую сумму с НДС, что облегчает работу бухгалтерии клиента.</li>
                     </ul>
+
+                    <!-- MOCK UI PRINT KP PDF -->
+                    <div class="fake-ui-panel">
+                        <div style="font-family: 'Outfit'; font-size: 0.8rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span>Печатный документ (Интерактивное превью КП)</span>
+                            <span class="val-blue" style="font-size:0.75rem;"><i class="fa-solid fa-print"></i> @media print: ACTIVE</span>
+                        </div>
+                        
+                        <div class="invoice-mock">
+                            <div class="inv-header">
+                                <div>
+                                    <div class="inv-title">ПРУТКОН ОС</div>
+                                    <div style="font-size: 0.65rem; color: #555;">Система автоматической генерации документов</div>
+                                </div>
+                                <div style="text-align: right; font-size: 0.75rem; color: #333;">
+                                    <b>КП № 10045-A</b><br>
+                                    Дата: 03.06.2026
+                                </div>
+                            </div>
+                            <div class="inv-grid">
+                                <div>
+                                    <b>Поставщик:</b> ООО «Пруткон»<br>
+                                    Адрес: г. Белгород, ул. Промышленная, 14<br>
+                                    Тел: +7 (4722) 11-22-33
+                                </div>
+                                <div>
+                                    <b>Покупатель:</b> ИП Иванов А.В.<br>
+                                    ИНН: 312309876543<br>
+                                    Транспортер: Grimme (Шаг 30)
+                                </div>
+                            </div>
+                            <table class="inv-table">
+                                <thead>
+                                    <tr>
+                                        <th>Название / Параметры</th>
+                                        <th>Кол-во</th>
+                                        <th>Цена без НДС</th>
+                                        <th>Сумма (с НДС 22%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <b>Лента транспортера Grimme</b><br>
+                                            L = 6000 мм, W = 800 мм, P = 40 мм, прутки 65G, замок резиновый
+                                        </td>
+                                        <td>1 шт.</td>
+                                        <td>91 560.00 ₽</td>
+                                        <td>111 703.20 ₽</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="inv-totals">
+                                <div>Всего без НДС: 91 560.00 ₽</div>
+                                <div style="color: #666;">Сумма НДС (22%): 20 143.20 ₽</div>
+                                <div style="font-size: 0.9rem; font-weight: 800; border-top: 1.5px solid #1a1a1a; padding-top: 5px; margin-top: 5px;">
+                                    Итого к оплате (с НДС): 111 703.20 ₽
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -659,21 +1521,24 @@
             <div class="details-grid">
                 <div class="detail-card reveal delay-1" style="grid-column: 1 / -1; border-color: rgba(255, 145, 0, 0.4);">
                     <div class="dc-icon-wrapper" style="background: rgba(255,145,0,0.1); border-color: rgba(255,145,0,0.2);"><i class="fa-solid fa-coins" style="color: var(--accent-orange);"></i></div>
-                    <div class="dc-title">Справедливое распределение прибыли</div>
+                    <div class="dc-title">Математическая модель распределения прибыли</div>
                     
                     <div class="fake-ui-panel">
                         <div class="fake-ui-row"><span>Маржа по заказу #10045:</span> <span class="val-green">250 000 ₽</span></div>
                         <div class="fake-ui-row"><span>Отчисление в ФОТ (25%):</span> <span class="val-green">62 500 ₽</span></div>
                         <div class="fake-ui-row"><span>Премия сотрудника (Доля 30% от ФОТ):</span> <span class="val-green">18 750 ₽</span></div>
                         <div class="fake-ui-row"><span>Налог НДФЛ (13%):</span> <span class="val-red">- 2 437 ₽</span></div>
-                        <div class="fake-ui-row" style="font-weight: 900; color: #fff; font-size: 1.1rem; border-top: 1px solid #333; margin-top: 10px; padding-top: 15px;"><span>ИТОГО К ВЫПЛАТЕ:</span> <span class="val-green">16 313 ₽</span></div>
+                        <div class="fake-ui-row" style="font-weight: 900; color: #fff; font-size: 1.1rem; border-top: 1px solid #333; margin-top: 10px; padding-top: 15px;"><span>ИТОГО К ВЫПЛАТЕ (На руки):</span> <span class="val-green">16 313 ₽</span></div>
                     </div>
 
                     <ul class="feature-list dev" style="margin-top: 30px;">
-                        <li>Программа сама берет чистую маржу от переведенных в статус "Архив/Завершен" сделок и автоматически откладывает глобальный процент в общий котел ФОТ.</li>
-                        <li>В настройках у каждого менеджера или рабочего задан его Оклад и его Индивидуальная Доля (%) от ФОТ.</li>
-                        <li>Система <b>мгновенно высчитывает премию</b>, сама вычитает 13% налогов и показывает директору точную сумму "На руки".</li>
-                        <li>Нажатие кнопки "Выплатить" формирует неудаляемую ведомость в архиве выплат. Больше никаких споров с бухгалтерией.</li>
+                        <li><b>Формула начисления бюджета ФОТ:</b> Из чистой маржи выполненного заказа выделяется фиксированный процент: <code>ФОТ = (Цена<sub>продажи</sub> - Себестоимость) &times; 0.25</code> (по умолчанию отчисление в ФОТ составляет 25%).</li>
+                        <li><b>Расчет премии и налога НДФЛ:</b>
+                            <br>• Начисление до вычета налогов: <code>Начисление = ФОТ &times; Доля<sub>сотрудника</sub></code> (где индивидуальная доля сотрудника от ФОТ составляет, например, 30%).
+                            <br>• Вычет налога: <code>Налог = Начисление &times; 0.13</code> (НДФЛ 13%).
+                            <br>• Чистая выплата "На руки": <code>К_выплате = Начисление &times; 0.87</code>.
+                        </li>
+                        <li><b>Реестр выплат и аудит:</b> Каждая транзакция сохраняется в Supabase в виде неудаляемой архивной записи, что полностью исключает риски серых расчетов и споров с бухгалтерией.</li>
                     </ul>
                 </div>
             </div>
@@ -687,14 +1552,59 @@
                 <p class="section-desc">Избавление менеджера от рутинного перепечатывания цифр из длинных писем клиентов.</p>
             </div>
             <div class="details-grid">
-                <div class="detail-card reveal" style="border-color: rgba(255, 145, 0, 0.4);">
+                <div class="detail-card reveal" style="grid-column: 1 / -1; border-color: rgba(255, 145, 0, 0.4);">
                     <div class="dc-icon-wrapper" style="background: rgba(255,145,0,0.1); border-color: rgba(255,145,0,0.2);"><i class="fa-solid fa-brain" style="color: var(--accent-orange);"></i></div>
-                    <div class="dc-title">Чтение запросов</div>
+                    <div class="dc-title">СемантическоеRegex-распознавание</div>
                     <ul class="feature-list dev">
-                        <li>Менеджер просто копирует неструктурированное письмо клиента (<i>"Добрый день, нам нужна сетка из стали длина 5000 ширина 800"</i>) и вставляет в окно парсера.</li>
-                        <li>Программа сканирует текст, <b>сама находит слова-триггеры "длина", "ширина"</b> и забирает цифры рядом с ними, моментально подставляя их в соответствующие поля калькулятора.</li>
-                        <li>В данный момент мы улучшаем точность алгоритма (R&D), чтобы он понимал опечатки клиента и конвертировал разные единицы измерения (метры в миллиметры).</li>
+                        <li><b>Чтение неструктурированных писем:</b> Менеджер вставляет скопированный текст заявки клиента в текстовое поле парсера (например: <i>"нужна сетка на Grimme длина 6 метров ширина 800 шаг 40 с замком"</i>).</li>
+                        <li><b>Regex-распознавание ключевых параметров:</b>
+                            <br>• Длина: <code>/длин\w*\s*(\d+)/i</code> или <code>/дл\s*(\d+)/i</code>
+                            <br>• Ширина: <code>/шир\w*\s*(\d+)/i</code> или <code>/ш\s*(\d+)/i</code>
+                            <br>• Шаг прутка: <code>/шаг\w*\s*(\d+)/i</code> или <code>/шг\s*(\d+)/i</code>
+                        </li>
+                        <li><b>Автоматическая нормализация величин:</b> Алгоритм самостоятельно распознает единицы измерения (метры, сантиметры) и преобразует их в миллиметры для калькулятора (<code>6 м &rarr; 6000 мм</code>, <code>80 см &rarr; 800 мм</code>), автоматически сопоставляя бренд (Grimme) по базе справочника.</li>
                     </ul>
+
+                    <!-- MOCK UI AI TEXT PARSER -->
+                    <div class="fake-ui-panel">
+                        <div style="font-family: 'Outfit'; font-size: 0.8rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span>Интерфейс AI-Парсера (Неструктурированный ввод)</span>
+                            <span class="val-purple" style="font-size:0.75rem;"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Parser: READY</span>
+                        </div>
+                        <div class="ai-parser-split">
+                            <div class="ai-input-pane">
+                                <div class="ai-input-title">Входящее письмо клиента:</div>
+                                <textarea class="ai-textarea" readonly>Добрый день! Изготовьте, пожалуйста, транспортерную ленту для картофелеуборочного комбайна Grimme. Размеры: длина нужна 6 метров, ширина полотна 800мм, а шаг прутка сделайте 40 мм. Обязательно с замком соединения. Спасибо!</textarea>
+                            </div>
+                            <div class="ai-extracted-pane">
+                                <div class="ai-extracted-title"><i class="fa-solid fa-microchip"></i> Распознанные параметры:</div>
+                                <div class="fake-ui-row">
+                                    <span>Бренд комбайна:</span>
+                                    <span class="val-green">Grimme</span>
+                                </div>
+                                <div class="fake-ui-row">
+                                    <span>Транспортер:</span>
+                                    <span class="val-blue">Основной просеивающий №30 (из Grimme)</span>
+                                </div>
+                                <div class="fake-ui-row">
+                                    <span>Длина (L):</span>
+                                    <span class="val-green">6000 мм <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: normal;">(6 м)</span></span>
+                                </div>
+                                <div class="fake-ui-row">
+                                    <span>Ширина (W):</span>
+                                    <span class="val-green">800 мм</span>
+                                </div>
+                                <div class="fake-ui-row">
+                                    <span>Шаг прутка (P):</span>
+                                    <span class="val-green">40 мм</span>
+                                </div>
+                                <div class="fake-ui-row">
+                                    <span>Соединение:</span>
+                                    <span class="val-purple">Замок (механический)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -733,10 +1643,10 @@
             
             <div class="details-grid">
                 <div class="highlight-box reveal delay-1">
-                    <div class="highlight-title"><i class="fa-solid fa-pen-ruler"></i> Авто-Чертежи (КБ ДАНИЛ)</div>
+                    <div class="highlight-title"><i class="fa-solid fa-robot"></i> Создание чертежей с использованием ИИ</div>
                     <p style="color: #b0b5be; line-height: 1.7; font-size: 1.1rem;">
-                        <b style="color:#fff;">Проблема:</b> Инженеры тратят многие часы на монотонное вычерчивание стандартных лент и замков в AutoCAD. <br><br>
-                        <b style="color:var(--accent-green);">Перспектива:</b> Забрав точные математические данные из Калькулятора (Шаг/Длина/Замок), ПРУТКОН ОС <b>сама сгенерирует готовый технический чертеж в PDF по строгим стандартам ГОСТ</b>. Роль инженера сведется лишь к финальной визуальной проверке и утверждению кнопкой.
+                        <b style="color:#fff;">Проблема:</b> Инженеры и конструкторы тратят ценное время на монотонное ручное построение чертежей по размерам в AutoCAD. <br><br>
+                        <b style="color:var(--accent-green);">Перспектива:</b> Забрав точные геометрические параметры из Калькулятора (Шаг/Длина/Замок/Размеры), ПРУТКОН ОС <b>с помощью ИИ автоматически сгенерирует точный технический чертеж по стандартам ГОСТ на основании введенных размеров</b>. Роль инженера сведется лишь к финальному контролю и утверждению.
                     </p>
                 </div>
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ПРУТКОН | Цех</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..700;1,100..700&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=18.1.1">
+    <link rel="stylesheet" href="css/styles.css?v=19.0.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="with-hero-bg">
@@ -17,6 +17,7 @@
                 <div class="view-header"><h2>Производственный терминал</h2></div>
                 <div class="header-actions">
                     <button class="btn btn-secondary btn-sm" onclick="window.refreshProductionData()"><i class="fa-solid fa-sync"></i> Обновить</button>
+                    <button class="btn btn-primary btn-sm" onclick="window.location.href='production_order.html'"><i class="fa-solid fa-file-signature"></i> Заказ-наряды</button>
                     <button class="btn btn-primary btn-sm" onclick="window.location.href='orders.html'"><i class="fa-solid fa-list-check"></i> К заказам</button>
                 </div>
             </header>
@@ -77,10 +78,12 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="header.js?v=18.1.1"></script>
-    <script src="menu.js?v=18.1.1"></script>
-    <script src="footer.js?v=18.1.1"></script>
-    <script src="core.js?v=18.1.1"></script>
-    <script src="production.js?v=18.1.1"></script>
+    <script src="js/layout/header.js?v=19.0.0"></script>
+    <script src="js/layout/menu.js?v=19.0.0"></script>
+    <script src="js/layout/footer.js?v=19.0.0"></script>
+    <script src="js/core/firebase_config.js"></script>
+    <script src="js/core/core.js?v=19.0.0"></script>
+    <script src="js/utils/printer.js?v=19.0.0"></script>
+    <script src="js/handlers/production.js?v=19.0.0"></script>
 </body>
 </html>

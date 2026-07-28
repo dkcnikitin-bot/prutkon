@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пруткон | Единый реестр моделей</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=18.1.1">
+    <link rel="stylesheet" href="css/styles.css?v=19.1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -42,6 +42,14 @@
 
                     <div id="dynamic-cat-filters" class="flex flex-wrap gap-2 mb-4 padding-15" style="background:rgba(0,0,0,0.2); border-radius:12px; border:1px solid var(--border-glass);">
                         <!-- Filter inputs -->
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4 padding-15" style="background:rgba(0,0,0,0.2); border-radius:12px; border:1px solid var(--border-glass);">
+                        <select id="catalog-grouping-select" class="form-control" style="width:200px; font-size:0.75rem;" onchange="window.renderCatalogTable()">
+                            <option value="">-- Без группировки --</option>
+                            <option value="category">Группировка по Разделу</option>
+                            <option value="type">Группировка по Типу (Классу)</option>
+                            <option value="brand">Группировка по Бренду</option>
+                        </select>
                     </div>
 
                     <div class="table-wrapper">
@@ -187,11 +195,19 @@
                     <div class="grid grid-2 gap-4 mb-4">
                         <div class="form-group">
                             <label>Производитель / Бренд</label>
-                            <input type="text" id="cc-brand" class="form-control">
+                            <input type="text" id="cc-brand" class="form-control" list="brands-datalist">
                         </div>
                         <div class="form-group">
                             <label>Класс / Тэг</label>
                             <input type="text" id="cc-type" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Поставщик</label>
+                            <input type="text" id="cc-supplier" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Место хранения</label>
+                            <input type="text" id="cc-storage" class="form-control">
                         </div>
                     </div>
                     <h5 class="stat-label border-bottom pb-2 mb-3">Технические спецификации</h5>
@@ -244,7 +260,7 @@
                         </div>
                         <div class="form-group">
                             <label>Производитель / Бренд</label>
-                            <input type="text" id="cat-add-brand" class="form-control" placeholder="Опционально">
+                            <input type="text" id="cat-add-brand" class="form-control" placeholder="Опционально" list="brands-datalist">
                         </div>
                         <div class="form-group" style="grid-column: span 2;">
                             <label>Фото (URL или относительный путь)</label>
@@ -345,24 +361,27 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="header.js?v=18.25.4"></script>
-    <script src="menu.js?v=18.25.4"></script>
-    <script src="footer.js?v=18.25.4"></script>
-    <script src="i18n.js?v=18.25.4"></script>
-    <script src="version_history.js?v=18.25.4"></script>
-    <script src="core.js?v=18.25.4"></script>
-    <script src="catalog_master/state.js?v=18.25.4"></script>
-    <script src="catalog_master/step1.js?v=18.25.4"></script>
-    <script src="catalog_master/step2.js?v=18.25.4"></script>
-    <script src="catalog_master/step3.js?v=18.25.4"></script>
-    <script src="catalog_master/step4.js?v=18.25.4"></script>
-    <script src="catalog_master/step5.js?v=18.25.4"></script>
-    <script src="catalog_master/specification.js?v=18.25.4"></script>
-    <script src="catalog_master/manager.js?v=18.25.4"></script>
-    <script src="catalog.js?v=18.25.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/core/supabase_config.js"></script>
+    <script src="js/layout/header.js?v=19.0.0"></script>
+    <script src="js/layout/menu.js?v=19.0.0"></script>
+    <script src="js/layout/footer.js?v=19.0.0"></script>
+    <script src="js/core/i18n.js?v=19.0.0"></script>
+    <script src="js/core/version_history.js?v=19.0.0"></script>
+    <script src="js/core/core.js?v=19.1.6"></script>
+    <script src="js/handlers/catalog_master/state.js?v=19.0.0"></script>
+    <script src="js/handlers/catalog_master/step1.js?v=19.0.0"></script>
+    <script src="js/handlers/catalog_master/step2.js?v=19.1.5"></script>
+    <script src="js/handlers/catalog_master/step3.js?v=19.1.5"></script>
+    <script src="js/handlers/catalog_master/step4.js?v=19.1.5"></script>
+    <script src="js/handlers/catalog_master/step5.js?v=19.0.0"></script>
+    <script src="js/handlers/catalog_master/step6.js?v=19.1.6"></script>
+    <script src="js/handlers/catalog_master/specification.js?v=19.1.6"></script>
+    <script src="js/handlers/catalog_master/manager.js?v=19.1.5"></script>
+    <script src="js/handlers/catalog.js?v=19.0.0"></script>
     <!-- modal-add-model placeholder for CatalogManager -->
     <div id="modal-add-model" class="hidden" style="display:none;"></div>
+    <!-- brands-datalist for autocomplete -->
+    <datalist id="brands-datalist"></datalist>
 </body>
 </html>

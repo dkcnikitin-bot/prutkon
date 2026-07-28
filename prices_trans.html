@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пруткон | Прайсы конвейерные</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=18.1.1">
+    <link rel="stylesheet" href="css/styles.css?v=19.0.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -33,12 +33,57 @@
                     <div class="flex justify-between items-center mb-4">
                         <h4 id="price-title-trans" class="mb-0">Транспортерные ленты</h4>
                         <div class="flex gap-2 items-center">
-                            <input type="text" id="price-search-input-trans" class="form-control" placeholder="Поиск в реестре..." style="width:250px;" oninput="window.renderPriceTableTrans()">
+                            <input type="text" id="price-search-input-trans" class="form-control" placeholder="Поиск в реестре..." style="width:250px;" oninput="window.renderPriceTable()">
                         </div>
                     </div>
                     
-                    <div id="dynamic-filters-trans" class="flex flex-wrap gap-2 mb-4 padding-15" style="background:rgba(0,0,0,0.2); border-radius:12px; border:1px solid var(--border-glass);">
-                        <!-- Filter inputs -->
+                    <!-- Умные фильтры -->
+                    <div id="smart-filters" class="flex flex-wrap gap-3 mb-4 padding-15" style="background:rgba(0,0,0,0.25); border-radius:12px; border:1px solid var(--border-glass);">
+                        <div class="filter-group">
+                            <label class="text-xs neutral uppercase mb-1">Цена от</label>
+                            <input type="number" id="filter-price-min" class="form-control form-control-sm" placeholder="0" oninput="window.renderPriceTable()" style="width:120px;">
+                        </div>
+                        <div class="filter-group">
+                            <label class="text-xs neutral uppercase mb-1">Цена до</label>
+                            <input type="number" id="filter-price-max" class="form-control form-control-sm" placeholder="Без лимита" oninput="window.renderPriceTable()" style="width:120px;">
+                        </div>
+                        <div class="filter-group">
+                            <label class="text-xs neutral uppercase mb-1">Остаток</label>
+                            <select id="filter-stock" class="form-control form-control-sm" onchange="window.renderPriceTable()" style="width:140px;">
+                                <option value="">Все</option>
+                                <option value="in_stock">В наличии</option>
+                                <option value="low_stock">Мало (< 10)</option>
+                                <option value="out_of_stock">Нет в наличии</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="text-xs neutral uppercase mb-1">Диаметр / Ширина</label>
+                            <select id="filter-diameter" class="form-control form-control-sm" onchange="window.renderPriceTable()" style="width:140px;">
+                                <option value="">Все размеры</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="text-xs neutral uppercase mb-1">Материал</label>
+                            <select id="filter-steel-type" class="form-control form-control-sm" onchange="window.renderPriceTable()" style="width:140px;">
+                                <option value="">Все материалы</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="text-xs neutral uppercase mb-1">Только с фото</label>
+                            <div class="checkbox-custom" style="padding:5px 0;">
+                                <label style="font-size:0.85rem; cursor:pointer;">
+                                    <input type="checkbox" id="filter-has-photo" onchange="window.renderPriceTable()">
+                                    <span>Есть фото</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-group" style="align-self:flex-end;">
+                            <button class="btn btn-secondary btn-sm" onclick="window.clearFiltersTrans()" title="Сбросить фильтры"><i class="fa-solid fa-rotate-left"></i> Сброс</button>
+                        </div>
+                        
+                        <div id="dynamic-filters" class="flex flex-wrap gap-2 w-100 mt-2" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
+                            <!-- Динамические фильтры категории -->
+                        </div>
                     </div>
 
                     <div class="table-wrapper">
@@ -54,10 +99,11 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="header.js?v=18.1.1"></script>
-    <script src="menu.js?v=18.1.1"></script>
-    <script src="footer.js?v=18.1.1"></script>
-    <script src="core.js?v=18.1.1"></script>
-    <script src="prices_trans.js?v=18.1.1"></script>
+    <script src="js/layout/header.js?v=19.0.0"></script>
+    <script src="js/layout/menu.js?v=19.0.0"></script>
+    <script src="js/layout/footer.js?v=19.0.0"></script>
+    <script src="js/core/firebase_config.js"></script>
+    <script src="js/core/core.js?v=19.0.0"></script>
+    <script src="js/handlers/prices_trans.js?v=19.0.0"></script>
 </body>
 </html>

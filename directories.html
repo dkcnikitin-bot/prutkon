@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пруткон | Системные справочники</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..700;1,100..700&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=18.2.0">
+    <link rel="stylesheet" href="css/styles.css?v=19.0.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -31,7 +31,10 @@
 
                 <div class="panel glass-panel">
                     <div class="flex justify-between items-center mb-4">
-                        <h4 id="directory-title" class="mb-0">Загрузка...</h4>
+                        <div class="flex gap-2 items-center">
+                            <h4 id="directory-title" class="mb-0">Загрузка...</h4>
+                            <button id="dir-help-btn" class="btn btn-secondary btn-xs" style="padding: 2px 6px; font-size: 12px; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;" onclick="window.showDirectoryHelp()" title="Справка по разделу"><i class="fa-regular fa-circle-question"></i></button>
+                        </div>
                         <div class="flex gap-2 items-center">
                             <button id="dir-mass-delete-btn" class="btn btn-danger btn-sm hidden" onclick="window.massDeleteDirectories()">Удалить выбранные</button>
                             <input type="text" id="dir-search-input" class="form-control" placeholder="Поиск по названию..." style="width:250px;" oninput="window.updateDirSearch(this.value)">
@@ -95,14 +98,31 @@
         </div>
     </div>
 
+    <!-- MODAL: DIRECTORY HELP -->
+    <div id="dir-help-modal" class="modal">
+        <div class="glass-panel" style="width:650px; padding:35px; border: 1px solid var(--border-glass);">
+            <h3 class="mb-4 brand-red flex items-center gap-2">
+                <i class="fa-regular fa-circle-question text-xl"></i>
+                <span id="dir-help-title">Справка по разделу</span>
+            </h3>
+            <div id="dir-help-content" class="mb-5" style="max-height:400px; overflow-y:auto; line-height:1.6; font-size:14px; color:var(--text-main);">
+                <!-- Справка будет добавлена через JS -->
+            </div>
+            <div class="flex justify-end">
+                <button class="btn btn-primary" onclick="document.getElementById('dir-help-modal').classList.remove('active')">Понятно</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="header.js?v=18.2.0"></script>
-    <script src="menu.js?v=18.2.0"></script>
-    <script src="footer.js?v=18.2.0"></script>
-    <script src="i18n.js?v=18.2.0"></script>
-    <script src="version_history.js?v=18.2.0"></script>
-    <script src="core.js?v=18.2.0"></script>
-    <script src="directories.js?v=18.2.0"></script>
+    <script src="js/layout/header.js?v=19.0.0"></script>
+    <script src="js/layout/menu.js?v=19.0.0"></script>
+    <script src="js/layout/footer.js?v=19.0.0"></script>
+    <script src="js/core/i18n.js?v=19.0.0"></script>
+    <script src="js/core/version_history.js?v=19.0.0"></script>
+    <script src="js/core/firebase_config.js"></script>
+    <script src="js/core/core.js?v=19.0.0"></script>
+    <script src="js/handlers/directories.js?v=19.0.0"></script>
 </body>
 </html>
